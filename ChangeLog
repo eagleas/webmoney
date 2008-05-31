@@ -1,0 +1,23 @@
+ChangeLog
+
+Wed Feb 27 19:09:00 MSK 2008
+----------------------------
+  V 0.0.4
+  * Redesign interfaces, BIG changes
+  * Add Messenger class for processing messages queue in new thread
+  * Add ResponseError on incorrect http response (404, 501, etc)
+
+Wed Oct 24 17:57:00 MSK 2007
+----------------------------
+  V 0.0.3 
+  * Add send_message interface
+  * Add specific Exceptions
+  * Add parse_retval for response
+  
+Tue Aug 7 14:34:00 MSK 2007
+----------------------------
+  V 0.0.2
+  * Bug fixes...
+
+  V 0.0.1
+  * Initial release

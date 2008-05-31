@@ -1,0 +1,64 @@
+require 'rubygems'
+require 'rake'
+require 'rake/clean'
+require 'rake/gempackagetask'
+require 'tools/rakehelp'
+require 'spec/rake/spectask'
+
+GEM_VERSION="0.0.4"
+
+setup_extension('wmsigner', 'wmsigner')
+
+desc "Compiles native extensions"
+task :compile => [:wmsigner]
+
+task :default => [:compile, :spec]
+
+Spec::Rake::SpecTask.new do |task|
+  task.libs << 'spec'
+  task.spec_files = Dir.glob( 'spec/**/*_spec.rb' )
+  task.verbose = true
+end
+
+gemspec = Gem::Specification.new do |gemspec|
+  gemspec.name = "webmoney"
+  gemspec.version = GEM_VERSION
+  gemspec.author = "Alexander Oryol"
+  gemspec.email =  "eagle.alex@gmail.com"
+  gemspec.summary = "Webmoney interfaces and native wmsigner"
+  gemspec.files = %w( rakefile ChangeLog lib/WebMoneyCA.crt ) +
+                  Dir.glob( 'lib/*.rb' ) +
+                  Dir.glob( 'spec/*.rb' ) +
+                  Dir.glob( 'spec/unit/*.rb' ) +
+                  Dir.glob( 'ext/**/*.{h,cpp,rb}' ) +
+                  Dir.glob( 'tools/*.rb' )
+  gemspec.autorequire = 'webmoney'
+  gemspec.require_path = 'lib'
+  gemspec.add_dependency('activesupport')
+  gemspec.add_dependency('hpricot')
+  gemspec.add_dependency('builder')
+
+  if RUBY_PLATFORM.match("win32")
+    gemspec.platform = Gem::Platform::WIN32
+    gemspec.files += []
+  else
+    gemspec.platform = Gem::Platform::RUBY
+    gemspec.extensions = Dir.glob( 'ext/**/extconf.rb' )
+  end
+end
+
+task :package => [:clean, :compile, :spec]
+Rake::GemPackageTask.new( gemspec ) do |task|
+  task.gem_spec = gemspec
+  task.need_tar = true
+end
+
+setup_clean ["ext/wmsigner/*.{so,o}", "ext/wmsigner/Makefile", "lib/wmsigner.so", "pkg", "*.gem"]
+
+task :install => [:default, :package] do
+  sh %{ sudo gem install pkg/webmoney-#{GEM_VERSION}.gem }
+end
+
+task :uninstall do
+  sh %{ sudo gem uninstall webmoney }
+end
