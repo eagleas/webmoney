@@ -9,7 +9,7 @@ require 'hpricot'
 
 # Convert time from M$ format to ruby Time
 def Time.from_ms(str)
-  match = str.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.\d{3}/).to_a
+  match = str.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/).to_a
   match.shift
   Time.local(*match)
 end
