@@ -34,7 +34,6 @@ gemspec = Gem::Specification.new do |gemspec|
                   Dir.glob( 'tools/*.rb' )
   gemspec.autorequire = 'webmoney'
   gemspec.require_path = 'lib'
-  gemspec.add_dependency('activesupport')
   gemspec.add_dependency('hpricot')
   gemspec.add_dependency('builder')
 
