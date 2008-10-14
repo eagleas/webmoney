@@ -5,7 +5,7 @@ require 'rake/gempackagetask'
 require 'tools/rakehelp'
 require 'spec/rake/spectask'
 
-GEM_VERSION="0.0.4.1"
+GEM_VERSION="0.0.4.2"
 
 setup_extension('wmsigner', 'wmsigner')
 

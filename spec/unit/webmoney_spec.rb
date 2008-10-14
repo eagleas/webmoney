@@ -103,7 +103,7 @@ class Webmoney
         :wmid => @wm.wmid, :subj => 'Текст', :text => 'Тело <b>сообщения</b>')
       result.should be_kind_of(Hash)
       result[:id].should match(/^\d*$/)
-      ((result[:date] + 1.minutes) > Time.now).should be_true
+      ((result[:date] + 60) > Time.now).should be_true
     end
     
   end

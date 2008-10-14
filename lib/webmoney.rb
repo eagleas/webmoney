@@ -1,17 +1,16 @@
 require File.dirname(__FILE__) +'/wmsigner'
+require 'time'
 require 'net/http'
 require 'net/https'
 require 'rubygems'
-require 'active_support'
 require 'iconv'
 require 'builder'
 require 'hpricot'
 
-# Convert time from M$ format to ruby Time
-def Time.from_ms(str)
-  match = str.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/).to_a
-  match.shift
-  Time.local(*match)
+class Object
+  def blank?
+    respond_to?(:empty?) ? empty? : !self
+  end
 end
 
 # Main class for Webmoney lib. Instance contain info

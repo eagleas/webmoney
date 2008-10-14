@@ -14,7 +14,7 @@ class Webmoney
         recalled = doc.at('/response/certinfo/attestat/row')['recalled'].to_i
         locked = doc.at('/response/certinfo/userinfo/value/row')['locked'].to_i
         @attestat = ( recalled + locked > 0) ? ALIAS : tid
-        @created_at = Time.from_ms(doc.at('/response/certinfo/attestat/row')['datecrt'])
+        @created_at = Time.xmlschema(doc.at('/response/certinfo/attestat/row')['datecrt'])
 
         # TODO more attestat fields...
 

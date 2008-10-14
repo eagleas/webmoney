@@ -1,5 +1,17 @@
 ChangeLog
 
+Tue Oct 14 2008 18:46:50 +0400
+----------------------------
+  V 0.0.4.2
+  * Remove ActiveSuport stupid dependency
+  * Remove Time.from_ms meaningless method
+  * Rename config file to ~/.wm/config.yml
+
+Tue Aug 19 11:31:53 2008 +0400
+----------------------------
+  V 0.0.4.1
+  * Fix error in parsing ms-data without ending zeros
+
 Wed Feb 27 19:09:00 MSK 2008
 ----------------------------
   V 0.0.4
