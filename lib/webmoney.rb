@@ -170,15 +170,15 @@ class Webmoney
         return {:id => doc.at('//message')['id'], :date => time}
     end
   end
-  
-  protected
 
   # Signing string by instance wmid's
   # Return signed string
   def sign(str)
     @signer.sign(str) unless str.blank?
   end
-    
+
+  protected
+
   # Make HTTPS request, return result body if 200 OK
   def https_request(iface, xml)
     url = case iface
