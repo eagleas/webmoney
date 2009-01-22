@@ -40,8 +40,8 @@ Gem::Specification.new do |s|
               "spec/unit/time_spec.rb",
               "spec/unit/webmoney_spec.rb",
               "spec/unit/wmid_spec.rb" ]
+  s.extensions << 'ext/wmsigner/extconf.rb'
   s.extra_rdoc_files = ["ChangeLog", "README"]
   s.add_dependency('hpricot')
   s.add_dependency('builder')
-  s.add_dependency('iconv')
 end
