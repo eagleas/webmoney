@@ -1,4 +1,3 @@
-require 'iconv'
 require 'thread'
 
 class Webmoney

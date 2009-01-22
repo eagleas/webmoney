@@ -8,7 +8,7 @@ class Webmoney
       @wm = webmoney()                                                                                               
     end
     
-    def make_request(wmid=nil)
+    def make_request(wmid=nil)      #   :nodoc:
       test_wmid = wmid || @wm.wmid
       x = Builder::XmlMarkup.new
       x.request do

@@ -1,3 +1,66 @@
+=begin rdoc
+== About Webmoney library
+
+This library help to make requests to WebMoney Transfer http://www.wmtransfer.com
+XML-interfaces: http://www.wmtransfer.com/eng/developers/interfaces/index.shtml
+
+Gem have built-in native *wmsigner*.
+
+Author::    Alexander Oryol (mailto:eagle.alex@gmail.com)
+License::   MIT License
+
+== Request types
+
+- create_invoice     - x1
+- create_transaction - x2
+- operation_history  - x3
+- outgoing_invoices  - x4
+- finish_protect     - x5
+- send_message       - x6
+- check_sign         - x7
+- find_wm            - x8
+- balance            - x9
+- incoming_invoices  - x10
+- get_passport       - x11
+- reject_protection  - x13
+- transaction_moneyback - x14
+- i_trust               - x15
+- trust_me              - x15
+- trust_save            - x15
+- create_purse          - x16
+- bussines_level
+
+Please, see relative documentation and parameters on wiki:
+
+http://wiki.wmtransfer.com/wiki/list/XML-Interfaces
+
+http://wiki.webmoney.ru/wiki/list/XML-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D1%8B (in russian)
+
+or official sites:
+
+http://www.wmtransfer.com/eng/developers/interfaces/xml/index.shtml
+
+http://www.webmoney.ru/rus/developers/interfaces/xml/index.shtml (in russian)
+
+== Examples
+
+@wm = Webmoney.new(:wmid => '123456789012', :password => 'my_pass', :key => 'gQABAIR6...2cC8FZTyKyjBM=')
+
+passport = @wm.request(:get_passport, :wmid => @wm.wmid)
+
+bl = @wm.request(:bussines_level, :wmid => '123456789012')
+
+@wm.request(:send_message, :wmid => @wm.wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>')
+
+
+Also, see examples into spec's.
+=end
+
+
+# :title:Webmoney library Documentation
+# :main:lib/webmoney.rb
+# :include:README
+
 require File.dirname(__FILE__) +'/wmsigner'
 require 'time'
 require 'net/http'
@@ -7,15 +70,9 @@ require 'iconv'
 require 'builder'
 require 'hpricot'
 
-class Object
-  def blank?
-    respond_to?(:empty?) ? empty? : !self
-  end
-end
-
 # Main class for Webmoney lib. Instance contain info
-# for Webmoney interfaces requests (wmid, key, etc). 
-# Implement base requests to Webmoney.
+# for WMT-interfaces requests (wmid, key, etc).
+# Implement general requests.
 class Webmoney
 
   # Error classes
@@ -32,14 +89,20 @@ class Webmoney
   attr_reader :wmid, :error, :errormsg, :last_request, :messenger
   
   # Required options:
-  # :wmid (WMID)
-  # :password (on Classic key or Light X509 certtificate & key)
-  # :key (Base64 string for Classic key) 
-  # OR TODO!
-  # :key (OpenSSL::PKey::RSA or OpenSSL::PKey::DSA object) AND
-  # :cert OpenSSL::X509::Certificate object
+  #
+  # - :wmid - WMID
+  # - :password - on Classic key or Light X509 certificate & key
+  # - :key - Base64 string for Classic key
+  #
+  # OR
+  # #TODO
+  # - :key - OpenSSL::PKey::RSA or OpenSSL::PKey::DSA object
+  # - :cert - OpenSSL::X509::Certificate object
+  #
   # Optional:
-  # :ca_cert (path of a CA certification file in PEM format)
+  #
+  # - :ca_cert - path of a CA certification file in PEM format
+
   def initialize(opt = {})
     @wmid = Wmid.new(opt[:wmid])
     
@@ -76,7 +139,7 @@ class Webmoney
       'incoming_invoices' => URI.parse( w3s + 'XMLInInvoices.asp'), # x10
       'get_passport' => URI.parse( 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp'), # x11
       'reject_protection' => URI.parse( w3s + 'XMLRejectProtect.asp'), # x13
-      'transaction_moneyback' => URI.parse( w3s + 'XMLTransMoneyback.asp'), # 14
+      'transaction_moneyback' => URI.parse( w3s + 'XMLTransMoneyback.asp'), # x14
       'i_trust'  => URI.parse( w3s + 'XMLTrustList.asp'), # x15
       'trust_me'  => URI.parse( w3s + 'XMLTrustList2.asp'), # x15
       'trust_save'  => URI.parse( w3s + 'XMLTrustSave2.asp'), # x15
@@ -87,21 +150,24 @@ class Webmoney
     @ic_in = Iconv.new('UTF-8', 'CP1251')
     @ic_out = Iconv.new('CP1251', 'UTF-8')
   end
-  
+
+  # Webmoney instance is classic type?
+
   def classic?
     ! @signer.nil?
   end
   
   # Send message through Queue and Thread
-  # Params - :wmid, :subj, :text
+  #
+  # Params: { :wmid, :subj, :text }
+
   def send_message(params)
     @messenger = Messenger.new(self) if @messenger.nil?
     @messenger.push(params)
   end
   
-  # ================================================
-  # Main interface function
-  # ================================================
+  # Generic function for request to WMT-interfaces
+
   def request(iface, opt ={})
     reqn = reqn()
     raise ArgumentError unless opt.kind_of?(Hash)
@@ -150,7 +216,7 @@ class Webmoney
       end
     end
     
-    # Request do!
+    # Do request
     res = https_request(iface, x.target!)
     
     # Parse response
@@ -171,15 +237,17 @@ class Webmoney
     end
   end
 
-  # Signing string by instance wmid's
-  # Return signed string
+  # Signing string by instance wmid's,
+  # return signed string
+
   def sign(str)
-    @signer.sign(str) unless str.blank?
+    @signer.sign(str) unless str.nil? || str.empty?
   end
 
   protected
 
   # Make HTTPS request, return result body if 200 OK
+
   def https_request(iface, xml)
     url = case iface
       when Symbol
@@ -209,7 +277,7 @@ class Webmoney
     end
   end
 
-  def parse_retval(response_xml)
+  def parse_retval(response_xml)         # :nodoc:
     doc = Hpricot.XML(response_xml)
     retval_element = doc.at('//retval')
     # Workaround for passport interface
@@ -227,8 +295,8 @@ class Webmoney
     end
   end
 
-  # Create unique Request Number based on time
-  # Return 16 digits string
+  # Create unique Request Number based on time,
+  # return 16 digits string
   def reqn
     t = Time.now
     t.strftime('%Y%m%d%H%M%S') + t.to_f.to_s.match(/\.(\d\d)/)[1]

@@ -1,7 +1,9 @@
 # Support class
 class Webmoney
   class Wmid < String
-    
+
+    # Parameter: wmid - String or Wmid
+
     def initialize(str)
       str = str.to_s unless str.kind_of?(String)
       raise IncorrectWmidError, ': ' + str.to_s unless str =~ /^\d{12}$/
