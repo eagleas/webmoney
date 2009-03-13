@@ -61,7 +61,6 @@ Also, see examples into spec's.
 # :main:lib/webmoney.rb
 # :include:README
 
-require File.dirname(__FILE__) +'/wmsigner'
 require 'time'
 require 'net/http'
 require 'net/https'
@@ -69,6 +68,13 @@ require 'rubygems'
 require 'iconv'
 require 'builder'
 require 'hpricot'
+
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
+
+require 'wmsigner'
+require 'wmid'
+require 'passport'
+require 'messenger'
 
 # Main class for Webmoney lib. Instance contain info
 # for WMT-interfaces requests (wmid, key, etc).
@@ -81,10 +87,6 @@ class Webmoney
   class ResultError < WebmoneyError;  end
   class IncorrectWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
-  
-  require File.dirname(__FILE__) + '/../lib/wmid'
-  require File.dirname(__FILE__) + '/../lib/passport'
-  require File.dirname(__FILE__) + '/../lib/messenger'
   
   attr_reader :wmid, :error, :errormsg, :last_request, :messenger
   
