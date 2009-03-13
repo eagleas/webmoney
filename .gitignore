@@ -4,3 +4,5 @@ doc/*
 lib/wmsigner.so
 ext/wmsigner/*
 pkg/*
+webmoney-*.gem
+
