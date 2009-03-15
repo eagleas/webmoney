@@ -1,62 +1,3 @@
-=begin rdoc
-== About Webmoney library
-
-This library help to make requests to WebMoney Transfer http://www.wmtransfer.com
-XML-interfaces: http://www.wmtransfer.com/eng/developers/interfaces/index.shtml
-
-Gem have built-in native *wmsigner*.
-
-Author::    Alexander Oryol (mailto:eagle.alex@gmail.com)
-License::   MIT License
-
-== Request types
-
-- create_invoice     - x1
-- create_transaction - x2
-- operation_history  - x3
-- outgoing_invoices  - x4
-- finish_protect     - x5
-- send_message       - x6
-- check_sign         - x7
-- find_wm            - x8
-- balance            - x9
-- incoming_invoices  - x10
-- get_passport       - x11
-- reject_protection  - x13
-- transaction_moneyback - x14
-- i_trust               - x15
-- trust_me              - x15
-- trust_save            - x15
-- create_purse          - x16
-- bussines_level
-
-Please, see relative documentation and parameters on wiki:
-
-http://wiki.wmtransfer.com/wiki/list/XML-Interfaces
-
-http://wiki.webmoney.ru/wiki/list/XML-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D1%8B (in russian)
-
-or official sites:
-
-http://www.wmtransfer.com/eng/developers/interfaces/xml/index.shtml
-
-http://www.webmoney.ru/rus/developers/interfaces/xml/index.shtml (in russian)
-
-== Examples
-
-@wm = Webmoney.new(:wmid => '123456789012', :password => 'my_pass', :key => 'gQABAIR6...2cC8FZTyKyjBM=')
-
-passport = @wm.request(:get_passport, :wmid => @wm.wmid)
-
-bl = @wm.request(:bussines_level, :wmid => '123456789012')
-
-@wm.request(:send_message, :wmid => @wm.wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>')
-
-
-Also, see examples into spec's.
-=end
-
-
 # :title:Webmoney library Documentation
 # :main:lib/webmoney.rb
 # :include:README
@@ -253,14 +194,14 @@ class Webmoney
     t.strftime('%Y%m%d%H%M%S') + t.to_f.to_s.match(/\.(\d\d)/)[1]
   end
 
-  def make_xml(iface, opt)
+  def make_xml(iface, opt)            # :nodoc:
     iface_func = ('xml_'+iface.to_s).to_sym
     self.send(iface_func, opt).target!
   rescue NoMethodError
     raise NotImplementedError, "#{iface_func}()"
   end
 
-  def make_result(iface, res)
+  def make_result(iface, res)         # :nodoc:
     doc = Hpricot.XML(res)
     iface_result = ('result_'+iface.to_s).to_sym
     self.send(iface_result, doc)

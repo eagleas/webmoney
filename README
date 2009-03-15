@@ -1,11 +1,72 @@
-README
+== About Webmoney library
 
-For run tests create ~/.wm/config.yml file:
+This library should help to make requests to WebMoney Transfer http://www.wmtransfer.com
+XML-interfaces: http://www.wmtransfer.com/eng/developers/interfaces/index.shtml
 
-common:
-  type: classic
-  wmid: '123456789012'
-  key: 'gQABAIR6... YOUR BASE64-KEY (see wmsigner readme) ...2cC8FZTyKyjBM='
-  password: _your_password_
+Gem have built-in native *wmsigner*.
 
-and type: rake spec
+Author::    Alexander Oryol (mailto:eagle.alex@gmail.com)
+License::   MIT License
+
+== Request types
+
+Completed:
+- send_message       - x6
+- get_passport       - x11
+- bussines_level
+
+Incompleted (help need!):
+- create_invoice     - x1
+- create_transaction - x2
+- operation_history  - x3
+- outgoing_invoices  - x4
+- finish_protect     - x5
+- check_sign         - x7
+- find_wm            - x8
+- balance            - x9
+- incoming_invoices  - x10
+- reject_protection  - x13
+- transaction_moneyback - x14
+- i_trust               - x15
+- trust_me              - x15
+- trust_save            - x15
+- create_purse          - x16
+
+Please, see relative documentation and parameters on wiki:
+
+http://wiki.wmtransfer.com/wiki/list/XML-Interfaces
+
+http://wiki.webmoney.ru/wiki/list/XML-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D1%8B (in russian)
+
+or official sites:
+
+http://www.wmtransfer.com/eng/developers/interfaces/xml/index.shtml
+
+http://www.webmoney.ru/rus/developers/interfaces/xml/index.shtml (in russian)
+
+== Examples
+
+= Setup
+
+@wm = Webmoney.new(:wmid => '123456789012', :password => 'my_pass', :key => 'gQABAIR6...2cC8FZTyKyjBM=')
+
+wmid = '111222333444'
+
+= Passport (X11) request:
+
+passport = @wm.request(:get_passport, :wmid => wmid)
+
+= Bussines level request:
+
+bl = @wm.request(:bussines_level, :wmid => wmid)
+
+= Sending message
+
+... for one message:
+@wm.request(:send_message, :wmid => wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>')
+
+... for many messages (with queue):
+@wm.send_message(:wmid => wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>')
+
+
+Also, see examples into spec's.

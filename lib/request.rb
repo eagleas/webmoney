@@ -1,4 +1,4 @@
-module Webmoney::XMLRequest
+module Webmoney::XMLRequest    # :nodoc:all
 
   def envelope(utf = true)
     x = Builder::XmlMarkup.new(:indent => 1)

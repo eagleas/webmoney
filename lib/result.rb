@@ -1,4 +1,4 @@
-module Webmoney::RequestResult
+module Webmoney::RequestResult    # :nodoc:all
 
   def result_check_sign(doc)
     doc.at('//testsign/res').inner_html == 'yes' ? true : false

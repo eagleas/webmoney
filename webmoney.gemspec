@@ -12,6 +12,8 @@ Gem::Specification.new do |s|
               "README",
               "lib/WebMoneyCA.crt",
               "lib/messenger.rb",
+              "lib/request.rb",
+              "lib/result.rb",
               "lib/passport.rb",
               "lib/webmoney.rb",
               "lib/wmid.rb",
