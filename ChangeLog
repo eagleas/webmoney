@@ -1,5 +1,11 @@
 ChangeLog
 
+Sun Mar 15 2009 14:55:18 +0400
+----------------------------
+  V 0.0.4.4
+  * Fix bug in send_message (reqn related)
+  * Refactor for more extendable
+
 Thu Jan 22 2009 14:00:00 +0400
 ----------------------------
   V 0.0.4.3
