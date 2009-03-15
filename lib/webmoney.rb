@@ -74,12 +74,17 @@ $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'wmsigner'
 require 'wmid'
 require 'passport'
+require 'request'
+require 'result'
 require 'messenger'
 
 # Main class for Webmoney lib. Instance contain info
 # for WMT-interfaces requests (wmid, key, etc).
 # Implement general requests.
 class Webmoney
+
+  include XMLRequest
+  include RequestResult
 
   # Error classes
   class WebmoneyError < StandardError; end
@@ -174,69 +179,13 @@ class Webmoney
     reqn = reqn()
     raise ArgumentError unless opt.kind_of?(Hash)
     opt[:wmid] = @wmid if opt[:wmid].nil?
-    x = Builder::XmlMarkup.new(:indent => 1)
-    x.instruct!(:xml, :version=>"1.0", :encoding=>"windows-1251")
-    unless [:get_passport, :bussines_level].include?(iface)
-      x.tag!('w3s.request') do
-        x.wmid @wmid
-        case iface
-          when :check_sign then
-            plan_out = @ic_out.iconv(opt[:plan])
-            x.testsign do 
-              x.wmid opt[:wmid]
-              x.plan { x.cdata! plan_out } 
-              x.sign opt[:sign]
-            end
-            plan = @wmid + opt[:wmid] + plan_out + opt[:sign]
-          when :send_message
-            x.reqn reqn
-            msgsubj = @ic_out.iconv(opt[:subj])
-            msgtext = @ic_out.iconv(opt[:text])
-            x.message do
-              x.receiverwmid opt[:wmid]
-              x.msgsubj { x.cdata! msgsubj }
-              x.msgtext { x.cdata! msgtext }
-            end
-            plan = opt[:wmid] + reqn + msgtext + msgsubj
-        end
-        x.sign sign(plan) if classic?
-      end
-    else
-      case iface
-        when :bussines_level
-          x.tag!('WMIDLevel.request') do
-            x.signerwmid @wmid
-            x.wmid opt[:wmid]
-          end
-        when :get_passport
-          x.request do
-            x.wmid @wmid
-            x.passportwmid opt[:wmid]
-            x.params { x.dict 0; x.info 1; x.mode 0 }
-            x.sign sign(@wmid + opt[:wmid]) if classic?
-          end
-      end
-    end
-    
+
     # Do request
-    res = https_request(iface, x.target!)
-    
+    res = https_request(iface, make_xml(iface, opt))
+
     # Parse response
     parse_retval(res)
-    doc = Hpricot.XML(res)
-    case iface
-      when :check_sign
-        return doc.at('//testsign/res').inner_html == 'yes' ? true : false
-      when :get_passport
-        return Passport.new(doc)
-      when :bussines_level
-        return doc.at('//level').inner_html.to_i
-      when :send_message
-        time = doc.at('//message/datecrt').inner_html
-        m = time.match(/(\d{4})(\d{2})(\d{2}) (\d{2}):(\d{2}):(\d{2})/)
-        time = Time.mktime(*m[1..6])
-        return {:id => doc.at('//message')['id'], :date => time}
-    end
+    make_result(iface, res)
   end
 
   # Signing string by instance wmid's,
@@ -262,7 +211,7 @@ class Webmoney
     if File.file? @ca_cert
       http.ca_file = @ca_cert
     else
-      raise CaCertificateError
+      raise CaCertificateError, @ca_cert
     end
     http.use_ssl = true
     @last_request = xml
@@ -275,7 +224,7 @@ class Webmoney
       else
         @error = result.code
         @errormsg = result.body if result.class.body_permitted?()
-        raise RequestError
+        raise RequestError, [@error, @errormsg].join(' ')
     end
   end
 
@@ -293,7 +242,7 @@ class Webmoney
     unless retval == 0
         @error = retval
         @errormsg = retdesc
-        raise ResultError
+        raise ResultError, [@error, @errormsg].join(' ')
     end
   end
 
@@ -303,5 +252,20 @@ class Webmoney
     t = Time.now
     t.strftime('%Y%m%d%H%M%S') + t.to_f.to_s.match(/\.(\d\d)/)[1]
   end
-    
+
+  def make_xml(iface, opt)
+    iface_func = ('xml_'+iface.to_s).to_sym
+    self.send(iface_func, opt).target!
+  rescue NoMethodError
+    raise NotImplementedError, "#{iface_func}()"
+  end
+
+  def make_result(iface, res)
+    doc = Hpricot.XML(res)
+    iface_result = ('result_'+iface.to_s).to_sym
+    self.send(iface_result, doc)
+  rescue NoMethodError
+    raise NotImplementedError, "#{iface_result}()"
+  end
+
 end

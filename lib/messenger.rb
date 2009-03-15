@@ -13,12 +13,12 @@ class Webmoney
           unless msg.nil?
             begin
               result = @webmoney.request(:send_message, msg)
+              # Requeue if fail
               @queue.push(msg) unless result.kind_of?(Hash)
-            rescue ResultError
-              puts "ResultError: #{@webmoney.error} #{@webmoney.errormsg}"
-              # Silent drop message
-            rescue ResponseError
-              puts "ResponseError: #{@webmoney.error}"
+            rescue ResultError, ResponseError => e
+              # TODO Replace this to logger call
+              # puts "#{e}: #{@webmoney.error} #{@webmoney.errormsg}"
+
               # Requeue message
               @queue.push(msg)
             end
@@ -30,6 +30,8 @@ class Webmoney
     def push(msg)
       @queue.push(msg)
     end
+
+    # TODO callback on success send message
     
   end
   

@@ -6,7 +6,7 @@ class Webmoney
 
     def initialize(str)
       str = str.to_s unless str.kind_of?(String)
-      raise IncorrectWmidError, ': ' + str.to_s unless str =~ /^\d{12}$/
+      raise IncorrectWmidError, str unless str =~ /^\d{12}$/
       super(str)
     end
     

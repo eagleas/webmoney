@@ -44,9 +44,9 @@ class Webmoney
     end
 
     it "should parse retval and raise error" do
-      lambda { @wm.request(:create_transaction)}.should raise_error(ResultError)
-      @wm.error.should == -3
-      @wm.errormsg.should match(%r{incorrect value of w3s.request/trans/tranid  is incorrect})
+      lambda { @wm.request(:send_message, :wmid => '')}.should raise_error(ResultError)
+      @wm.error.should == -2
+      @wm.errormsg.should match(%r{value of w3s.request/message/receiverwmid  is incorrect})
     end
 
     it "should sign string" do
@@ -106,6 +106,10 @@ class Webmoney
       ((result[:date] + 60) > Time.now).should be_true
     end
     
+    it "should raise error on undefined xml func" do
+      lambda { @wm.request(:unexistent_interface) }.should raise_error(::NotImplementedError)
+    end
+
   end
 
 end
