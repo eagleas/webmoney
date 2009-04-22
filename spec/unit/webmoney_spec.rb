@@ -89,6 +89,14 @@ class Webmoney
       @wm.request(:get_passport, :wmid => @wm.wmid).should be_instance_of(Passport)
     end
 
+    it "should raise exception on bad WMID" do
+      lambda {@wm.request(:get_passport, :wmid => '111')}.should raise_error(Webmoney::ResultError)
+    end
+
+    it "should raise exception on non existent WMID" do
+      lambda {@wm.request(:get_passport, :wmid => '012345678901')}.should raise_error(Webmoney::NonExistentWmidError)
+    end
+
     it "should return correct BL" do
       wmid = '370860915669'
       @wm.request(:bussines_level, :wmid => wmid).should == 0

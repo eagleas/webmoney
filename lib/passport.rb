@@ -10,6 +10,7 @@ class Webmoney
       root = doc.at('/response')
       if root && root['retval'] && root['retval'].to_i == 0
         super(doc.at('/response/certinfo')['wmid'])
+        raise NonExistentWmidError unless doc.at('/response/certinfo/attestat')
         tid = doc.at('/response/certinfo/attestat/row')['tid'].to_i
         recalled = doc.at('/response/certinfo/attestat/row')['recalled'].to_i
         locked = doc.at('/response/certinfo/userinfo/value/row')['locked'].to_i

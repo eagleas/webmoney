@@ -32,9 +32,11 @@ class Webmoney
   class RequestError < WebmoneyError;  end
   class ResultError < WebmoneyError;  end
   class IncorrectWmidError < WebmoneyError; end
+  class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
   
   attr_reader :wmid, :error, :errormsg, :last_request, :messenger
+  attr_accessor :interfaces
   
   # Required options:
   #
