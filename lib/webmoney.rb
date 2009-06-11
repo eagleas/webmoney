@@ -193,7 +193,8 @@ class Webmoney
   # return 16 digits string
   def reqn
     t = Time.now
-    t.strftime('%Y%m%d%H%M%S') + t.to_f.to_s.match(/\.(\d\d)/)[1]
+    msec = t.to_f.to_s.match(/\.(\d\d)/)[1] rescue '00'
+    t.strftime('%Y%m%d%H%M%S') + msec
   end
 
   def make_xml(iface, opt)            # :nodoc:

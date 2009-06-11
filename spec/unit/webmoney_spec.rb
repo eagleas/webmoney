@@ -24,6 +24,16 @@ class Webmoney
       (t2 > t1).should be_true
     end
 
+    it "should correct reqn" do
+      Time.stub!(:now).and_return(Time.at(1244704683.69677))
+      @wm.send(:reqn).should == '2009061111180369'
+    end
+
+    it "should correct reqn with zero microsec" do
+      Time.stub!(:now).and_return(Time.at(1244704683))
+      @wm.send(:reqn).should == '2009061111180300'
+    end
+
     it "should raise error on incorrect arg" do
       lambda { @wm.send(:request, :check_sign, 1) }.
         should raise_error(ArgumentError)
