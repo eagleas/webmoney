@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "webmoney"
-  s.version = "0.0.4.5"
+  s.version = "0.0.4.6"
   s.homepage = "http://github.com/eagleas/webmoney"
   s.rubyforge_project = 'webmoney'
   s.author = "Alexander Oryol"
@@ -10,7 +10,10 @@ Gem::Specification.new do |s|
   s.files = [ "rakefile",
               "ChangeLog",
               "README",
-              "lib/WebMoneyCA.crt",
+              "lib/certs/02a6c417.0",
+              "lib/certs/3c58f906.0",
+              "lib/certs/AddTrust_External_Root.crt",
+              "lib/certs/WebMoneyCA.crt",
               "lib/messenger.rb",
               "lib/request.rb",
               "lib/result.rb",
