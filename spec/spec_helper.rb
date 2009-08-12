@@ -16,5 +16,8 @@ end
 ::WmConfig = OpenStruct.new(config.common)
 
 def webmoney
-  Webmoney.new :wmid => WmConfig.wmid, :password => WmConfig.password, :key => WmConfig.key
+  Webmoney.new :wmid => WmConfig.wmid,
+    :password => WmConfig.password,
+    :key => WmConfig.key,
+    :ca_cert => WmConfig.ca_cert
 end

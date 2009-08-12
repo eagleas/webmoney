@@ -69,7 +69,7 @@ class Webmoney
     # ca_cert or default
     @ca_cert = 
       if opt[:ca_cert].nil?
-         File.dirname(__FILE__) + '/../lib/WebMoneyCA.crt'
+         File.dirname(__FILE__) + '/../lib/certs/'
       else
         opt[:ca_cert]
       end
@@ -153,6 +153,8 @@ class Webmoney
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     if File.file? @ca_cert
       http.ca_file = @ca_cert
+    elsif File.directory? @ca_cert
+      http.ca_path = @ca_cert
     else
       raise CaCertificateError, @ca_cert
     end
