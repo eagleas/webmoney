@@ -102,9 +102,8 @@ class Webmoney
   end
 
   # Webmoney instance is classic type?
-
   def classic?
-    ! @signer.nil?
+    !! @signer
   end
   
   # Send message through Queue and Thread
