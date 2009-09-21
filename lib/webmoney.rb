@@ -35,8 +35,8 @@ class Webmoney
   class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
   
-  attr_reader :wmid, :error, :errormsg, :last_request, :messenger
-  attr_accessor :interfaces
+  attr_reader :wmid, :error, :errormsg, :last_request
+  attr_accessor :interfaces, :messenger
   
   # Required options:
   #
@@ -111,7 +111,7 @@ class Webmoney
   # Params: { :wmid, :subj, :text }
 
   def send_message(params)
-    @messenger = Messenger.new(self) if @messenger.nil?
+    @messenger = Messenger.new(self){} if @messenger.nil?
     @messenger.push(params)
   end
   
