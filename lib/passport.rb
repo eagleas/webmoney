@@ -1,7 +1,7 @@
 require 'hpricot'
 
 # Class for store attestat information
-class Webmoney
+module Webmoney
   class Passport < Wmid
 
     # doc - Hpricot::Doc or xml-string

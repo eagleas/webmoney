@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-class Webmoney
+module Webmoney
 
   describe Webmoney, "class" do
 
@@ -8,10 +8,6 @@ class Webmoney
       @wm = webmoney()
     end
 
-    it "should be instance of Webmoney" do
-      @wm.should be_instance_of(Webmoney)
-    end
-    
     it "should be classic" do
       @wm.classic?.should be_true
     end

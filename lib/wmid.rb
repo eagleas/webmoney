@@ -1,5 +1,5 @@
 # Support class
-class Webmoney
+module Webmoney
   class Wmid < String
 
     # Parameter: wmid - String or Wmid

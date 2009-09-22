@@ -11,18 +11,12 @@ require 'builder'
 require 'hpricot'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
+%w(wmsigner wmid passport request result messenger).each { |lib| require lib }
 
-require 'wmsigner'
-require 'wmid'
-require 'passport'
-require 'request'
-require 'result'
-require 'messenger'
-
-# Main class for Webmoney lib. Instance contain info
+# Module for Webmoney lib. Instance contain info
 # for WMT-interfaces requests (wmid, key, etc).
 # Implement general requests.
-class Webmoney
+module Webmoney
 
   include XMLRequest
   include RequestResult
@@ -37,25 +31,25 @@ class Webmoney
   
   attr_reader :wmid, :error, :errormsg, :last_request, :messenger
   attr_accessor :interfaces
-  
-  # Required options:
-  #
-  # - :wmid - WMID
-  # - :password - on Classic key or Light X509 certificate & key
-  # - :key - Base64 string for Classic key
-  #
-  # OR
-  # #TODO
-  # - :key - OpenSSL::PKey::RSA or OpenSSL::PKey::DSA object
-  # - :cert - OpenSSL::X509::Certificate object
-  #
-  # Optional:
-  #
-  # - :ca_cert - path of a CA certification file in PEM format
+
+ # Required options:
+ #
+ # - :wmid - WMID
+ # - :password - on Classic key or Light X509 certificate & key
+ # - :key - Base64 string for Classic key
+ #
+ # OR
+ # #TODO
+ # - :key - OpenSSL::PKey::RSA or OpenSSL::PKey::DSA object
+ # - :cert - OpenSSL::X509::Certificate object
+ #
+ # Optional:
+ #
+ # - :ca_cert - path of a CA certification file in PEM format
 
   def initialize(opt = {})
     @wmid = Wmid.new(opt[:wmid])
-    
+
     # classic or light
     case opt[:key]
       when String
@@ -65,9 +59,9 @@ class Webmoney
         @cert = opt[:cert]
         @password = opt[:password]
     end
-    
+
     # ca_cert or default
-    @ca_cert = 
+    @ca_cert =
       if opt[:ca_cert].nil?
          File.dirname(__FILE__) + '/../lib/certs/'
       else
@@ -75,7 +69,7 @@ class Webmoney
       end
 
     w3s = 'https://w3s.wmtransfer.com/asp/'
-    
+
     @interfaces = {
       'create_invoice'  => URI.parse( w3s + 'XMLInvoice.asp' ), # x1
       'create_transaction'  => URI.parse( w3s + 'XMLTrans.asp' ), # x2

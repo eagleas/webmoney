@@ -15,8 +15,12 @@ if ENV['WM_ENV']
 end
 ::WmConfig = OpenStruct.new(config.common)
 
+class TestWM
+  include Webmoney
+end
+
 def webmoney
-  Webmoney.new :wmid => WmConfig.wmid,
+  TestWM.new :wmid => WmConfig.wmid,
     :password => WmConfig.password,
     :key => WmConfig.key,
     :ca_cert => WmConfig.ca_cert

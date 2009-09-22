@@ -1,6 +1,6 @@
 require 'thread'
 
-class Webmoney
+module Webmoney
 
   class Messenger
     

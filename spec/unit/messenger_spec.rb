@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-class Webmoney
+module Webmoney
 
   describe Messenger, "class" do
 
