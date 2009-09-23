@@ -3,8 +3,10 @@ require 'thread'
 module Webmoney
 
   class Messenger
-    
-    def initialize(owner)
+
+    attr_reader :thread
+
+    def initialize(owner, &logger)
       @webmoney = owner
       @queue = Queue.new
       @thread = Thread.new(@queue) do |q|
@@ -13,16 +15,16 @@ module Webmoney
           unless msg.nil?
             begin
               result = @webmoney.request(:send_message, msg)
-              # Requeue if fail
+              logger.call(msg, result)
+              # Requeue message on fail
               @queue.push(msg) unless result.kind_of?(Hash)
             rescue ResultError, ResponseError => e
-              # TODO Replace this to logger call
-              # puts "#{e}: #{@webmoney.error} #{@webmoney.errormsg}"
-
+              logger.call(msg, e)
               # Requeue message
               @queue.push(msg)
             end
           end
+          sleep(0.2)
         end
       end
     end

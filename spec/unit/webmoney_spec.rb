@@ -113,8 +113,10 @@ module Webmoney
     end
     
     it "should send message" do
-      result = @wm.request(:send_message, 
-        :wmid => @wm.wmid, :subj => 'Текст', :text => 'Тело <b>сообщения</b>')
+      result = @wm.request( :send_message,
+        :wmid => @wm.wmid,
+        :subj => 'Текст',
+        :text => 'Тело <b>сообщения</b>')
       result.should be_kind_of(Hash)
       result[:id].should match(/^\d*$/)
       ((result[:date] + 60) > Time.now).should be_true

@@ -29,23 +29,23 @@ module Webmoney
   class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
   
-  attr_reader :wmid, :error, :errormsg, :last_request, :messenger
-  attr_accessor :interfaces
-
- # Required options:
- #
- # - :wmid - WMID
- # - :password - on Classic key or Light X509 certificate & key
- # - :key - Base64 string for Classic key
- #
- # OR
- # #TODO
- # - :key - OpenSSL::PKey::RSA or OpenSSL::PKey::DSA object
- # - :cert - OpenSSL::X509::Certificate object
- #
- # Optional:
- #
- # - :ca_cert - path of a CA certification file in PEM format
+  attr_reader :wmid, :error, :errormsg, :last_request
+  attr_accessor :interfaces, :messenger
+  
+  # Required options:
+  #
+  # - :wmid - WMID
+  # - :password - on Classic key or Light X509 certificate & key
+  # - :key - Base64 string for Classic key
+  #
+  # OR
+  # #TODO
+  # - :key - OpenSSL::PKey::RSA or OpenSSL::PKey::DSA object
+  # - :cert - OpenSSL::X509::Certificate object
+  #
+  # Optional:
+  #
+  # - :ca_cert - file CA certificate or path to directory with certs (in PEM format)
 
   def initialize(opt = {})
     @wmid = Wmid.new(opt[:wmid])
@@ -105,7 +105,7 @@ module Webmoney
   # Params: { :wmid, :subj, :text }
 
   def send_message(params)
-    @messenger = Messenger.new(self) if @messenger.nil?
+    @messenger = Messenger.new(self){} if @messenger.nil?
     @messenger.push(params)
   end
   
