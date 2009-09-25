@@ -18,4 +18,13 @@ module Webmoney::RequestResult    # :nodoc:all
     time = Time.mktime(*m[1..6])
     { :id => doc.at('//message')['id'], :date => time }
   end
+
+  def result_find_wm(doc)
+    {
+      :retval => doc.at('//retval').inner_html.to_i,
+      :wmid   => (doc.at('//testwmpurse/wmid').inner_html rescue nil),
+      :purse  => (doc.at('//testwmpurse/purse').inner_html rescue nil)
+    }
+  end
+
 end

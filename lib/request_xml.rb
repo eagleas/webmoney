@@ -1,11 +1,11 @@
-module Webmoney::XMLRequest    # :nodoc:all
+module Webmoney::RequestXML    # :nodoc:all
 
   def envelope(utf = true)
     x = Builder::XmlMarkup.new(:indent => 1)
     encoding = utf ? "utf-8" : "windows-1251"
     x.instruct!(:xml, :version => "1.0", :encoding => encoding)
     x
-  end  
+  end
 
   def xml_get_passport(opt)
     x = envelope(false)
@@ -60,6 +60,24 @@ module Webmoney::XMLRequest    # :nodoc:all
       end
       if classic?
         @plan = opt[:wmid] + req + msgtext + msgsubj
+        x.sign sign(@plan)
+      end
+    end
+    x
+  end
+
+  def xml_find_wm(opt)
+    x = envelope(false)
+    req = reqn()
+    x.tag!('w3s.request') do
+      x.wmid @wmid
+      x.reqn req
+      x.testwmpurse do
+        x.wmid( opt[:wmid] || '' )
+        x.purse( opt[:purse] || '' )
+      end
+      if classic?
+        @plan = "#{opt[:wmid]}#{opt[:purse]}"
         x.sign sign(@plan)
       end
     end

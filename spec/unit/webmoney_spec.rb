@@ -123,7 +123,7 @@ module Webmoney
     end
     
     it "should raise error on undefined xml func" do
-      lambda { @wm.request(:unexistent_interface) }.should raise_error(::NotImplementedError)
+      lambda { @wm.request(:unexistent_interface) }.should raise_error(::NoMethodError)
     end
 
   end

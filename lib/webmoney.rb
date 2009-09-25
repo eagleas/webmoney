@@ -11,14 +11,15 @@ require 'builder'
 require 'hpricot'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
-%w(wmsigner wmid passport request result messenger).each { |lib| require lib }
+%w(wmsigner wmid passport purse request_xml request_retval request_result messenger).each { |lib| require lib }
 
 # Module for Webmoney lib. Instance contain info
 # for WMT-interfaces requests (wmid, key, etc).
 # Implement general requests.
 module Webmoney
 
-  include XMLRequest
+  include RequestXML
+  include RequestRetval
   include RequestResult
 
   # Error classes
@@ -26,12 +27,14 @@ module Webmoney
   class RequestError < WebmoneyError;  end
   class ResultError < WebmoneyError;  end
   class IncorrectWmidError < WebmoneyError; end
+  class IncorrectPurseError < WebmoneyError; end
   class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
   
   attr_reader :wmid, :error, :errormsg, :last_request
   attr_accessor :interfaces, :messenger
-  
+
+
   # Required options:
   #
   # - :wmid - WMID
@@ -48,6 +51,7 @@ module Webmoney
   # - :ca_cert - file CA certificate or path to directory with certs (in PEM format)
 
   def initialize(opt = {})
+
     @wmid = Wmid.new(opt[:wmid])
 
     # classic or light
@@ -93,6 +97,9 @@ module Webmoney
     # Iconv.new(to, from)
     @ic_in = Iconv.new('UTF-8', 'CP1251')
     @ic_out = Iconv.new('CP1251', 'UTF-8')
+
+    # initialize workers by self
+    Purse.worker = self
   end
 
   # Webmoney instance is classic type?
@@ -108,20 +115,29 @@ module Webmoney
     @messenger = Messenger.new(self){} if @messenger.nil?
     @messenger.push(params)
   end
+
+  # Check existent WMID or not
+  #
+  # Params: wmid
+  def wmid_exist?(wmid)
+    request(:find_wm, :wmid => Wmid.new(wmid))[:retval] == 1
+  end
   
   # Generic function for request to WMT-interfaces
 
   def request(iface, opt ={})
-    reqn = reqn()
-    raise ArgumentError unless opt.kind_of?(Hash)
-    opt[:wmid] = @wmid if opt[:wmid].nil?
+    raise ArgumentError, "should be hash" unless opt.kind_of?(Hash)
+
+    # Use self wmid when not defined
+    opt[:wmid] ||= @wmid
 
     # Do request
     res = https_request(iface, make_xml(iface, opt))
 
     # Parse response
-    parse_retval(res)
-    make_result(iface, res)
+    doc = Hpricot.XML(res)
+    parse_retval(iface, doc)
+    make_result(iface, doc)
   end
 
   # Signing string by instance wmid's,
@@ -166,24 +182,6 @@ module Webmoney
     end
   end
 
-  def parse_retval(response_xml)         # :nodoc:
-    doc = Hpricot.XML(response_xml)
-    retval_element = doc.at('//retval')
-    # Workaround for passport interface
-    unless retval_element.nil?
-      retval = retval_element.inner_html.to_i
-      retdesc = doc.at('//retdesc').inner_html unless doc.at('//retdesc').nil?
-    else
-      retval = doc.at('//response')['retval'].to_i
-      retdesc = doc.at('//response')['retdesc']
-    end
-    unless retval == 0
-        @error = retval
-        @errormsg = retdesc
-        raise ResultError, [@error, @errormsg].join(' ')
-    end
-  end
-
   # Create unique Request Number based on time,
   # return 16 digits string
   def reqn
@@ -193,18 +191,22 @@ module Webmoney
   end
 
   def make_xml(iface, opt)            # :nodoc:
-    iface_func = ('xml_'+iface.to_s).to_sym
-    self.send(iface_func, opt).target!
-  rescue NoMethodError
-    raise NotImplementedError, "#{iface_func}()"
+    iface_func = "xml_#{iface}"
+    send(iface_func, opt).target!
   end
 
-  def make_result(iface, res)         # :nodoc:
-    doc = Hpricot.XML(res)
-    iface_result = ('result_'+iface.to_s).to_sym
-    self.send(iface_result, doc)
-  rescue NoMethodError
-    raise NotImplementedError, "#{iface_result}()"
+  def parse_retval(iface, doc)         # :nodoc:
+    method = "retval_#{iface}"
+    if respond_to?(method)
+      send(method, doc)
+    else
+      retval_common(doc)
+    end
+  end
+
+  def make_result(iface, doc)         # :nodoc:
+    iface_result = "result_#{iface}"
+    send(iface_result, doc)
   end
 
 end
