@@ -13,6 +13,7 @@ License::   MIT License
 Completed:
 - send_message       - x6
 - get_passport       - x11
+- find_wm            - x8
 - bussines_level
 
 Incompleted (help need!):
@@ -22,7 +23,6 @@ Incompleted (help need!):
 - outgoing_invoices  - x4
 - finish_protect     - x5
 - check_sign         - x7
-- find_wm            - x8
 - balance            - x9
 - incoming_invoices  - x10
 - reject_protection  - x13
@@ -31,6 +31,9 @@ Incompleted (help need!):
 - trust_me              - x15
 - trust_save            - x15
 - create_purse          - x16
+- create_contract       - x17
+- transaction_get       - x18
+
 
 Please, see relative documentation and parameters on wiki:
 
@@ -48,17 +51,24 @@ http://www.webmoney.ru/rus/developers/interfaces/xml/index.shtml (in russian)
 
 = Setup
 
-@wm = Webmoney.new(:wmid => '123456789012', :password => 'my_pass', :key => 'gQABAIR6...2cC8FZTyKyjBM=')
+class MyWM
+  include Webmoney
+end
+
+@wm = MyWM.new(:wmid => '123456789012', :password => 'my_pass', :key => 'gQABAIR6...2cC8FZTyKyjBM=')
 
 wmid = '111222333444'
 
-= Passport (X11) request:
+= Passport (X11)
 
+Get passport:
 passport = @wm.request(:get_passport, :wmid => wmid)
+passport.attestat                                          # => 110  # formal attestat
+passport.created_at                                        # => Wed Feb 25 21:54:01 +0300 2004
 
-= Bussines level request:
+= Bussines level
 
-bl = @wm.request(:bussines_level, :wmid => wmid)
+bl = @wm.request(:bussines_level, :wmid => wmid)       #  => 15
 
 = Sending message
 
@@ -66,7 +76,24 @@ bl = @wm.request(:bussines_level, :wmid => wmid)
 @wm.request(:send_message, :wmid => wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>')
 
 ... for many messages (with queue):
-@wm.send_message(:wmid => wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>')
+@wm.send_message(:wmid => wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>') do |msg, result|
+  File.open("logfile", "w") do |file|
+    case result
+    when Hash
+      file.puts "Message #{msg.inspect} sended in:#{result[:date]} with id:#{result[:id]}"
+    else
+      file.puts "Error sent message #{msg.inspect}: #{result.message}"
+    end
+  end
+end
+
+= Purses and WMIDs
+
+@wm.wmid_exist?('123456789012')
+
+purse = Purse.new('123456789012')
+purse.wmid                                        # => '123456789012'
+purse.belong_to?('123456789012')                  # => true
 
 
 Also, see examples into spec's.

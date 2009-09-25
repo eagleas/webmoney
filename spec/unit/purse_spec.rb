@@ -6,7 +6,7 @@ module Webmoney
 
     before(:all) do
       # initialize worker
-      webmoney
+      @wm = webmoney
     end
 
     before(:each) do
@@ -28,6 +28,27 @@ module Webmoney
 
     it "should return wmid" do
       @t.wmid.should == '405424574082'
+    end
+
+    it "should return true" do
+      @wm.should_receive(:request).with(:find_wm, :purse => @t).and_return(:retval=>1, :wmid => '405424574082')
+      @t.belong_to?('405424574082').should be_true
+    end
+
+    it "should return false" do
+      @wm.should_receive(:request).with(:find_wm, :purse => @t).and_return(:retval=>0)
+      @t.belong_to?('123456789012').should be_false
+    end
+
+    context "memoize" do
+
+      before(:each) { @t.wmid }
+
+      it "it" do
+        @wm.should_not_receive(:request).with(:find_wm, :purse => @t)
+        @t.belong_to?('405424574082').should be_true
+      end
+
     end
 
   end

@@ -92,6 +92,8 @@ module Webmoney
       'trust_me'  => URI.parse( w3s + 'XMLTrustList2.asp'), # x15
       'trust_save'  => URI.parse( w3s + 'XMLTrustSave2.asp'), # x15
       'create_purse'  => URI.parse( w3s + 'XMLCreatePurse.asp'), # x16
+      'create_contract' => URI.parse( 'https://arbitrage.webmoney.ru/xml/X17_CreateContract.aspx'), # x17
+      'transaction_get' => URI.parse( 'https://merchant.webmoney.ru/conf/xml/XMLTransGet.asp'), # x18
       'bussines_level'  => URI.parse( 'https://stats.wmtransfer.com/levels/XMLWMIDLevel.aspx')
     }
     # Iconv.new(to, from)
