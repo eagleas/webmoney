@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "webmoney"
-  s.version = "0.0.4.6"
+  s.version = "0.0.4.7"
   s.homepage = "http://github.com/eagleas/webmoney"
   s.rubyforge_project = 'webmoney'
   s.author = "Alexander Oryol"
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
               "lib/request.rb",
               "lib/result.rb",
               "lib/passport.rb",
+              "lib/purse.rb",
               "lib/webmoney.rb",
               "lib/wmid.rb",
               "ext/wmsigner/extconf.rb",
@@ -41,6 +42,7 @@ Gem::Specification.new do |s|
   s.test_files = [ "spec/spec_helper.rb",
               "spec/unit/messenger_spec.rb",
               "spec/unit/passport_spec.rb",
+              "spec/unit/purse_spec.rb",
               "spec/unit/signer_spec.rb",
               "spec/unit/time_spec.rb",
               "spec/unit/webmoney_spec.rb",
