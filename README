@@ -89,11 +89,11 @@ end
 
 = Purses and WMIDs
 
-@wm.wmid_exist?('123456789012')
+@wm.wmid_exist?('123456789012')                   # => true
 
-purse = Purse.new('123456789012')
+purse = Purse.new('Z123456789012')
 purse.wmid                                        # => '123456789012'
 purse.belong_to?('123456789012')                  # => true
 
 
-Also, see examples into spec's.
+Also, see spec/* for examples.
