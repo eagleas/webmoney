@@ -12,6 +12,7 @@ module Webmoney::RequestRetval    # :nodoc:all
     @error = doc.at('//response')['retval'].to_i
     @errormsg = doc.at('//response')['retdesc']
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
+    raise Webmoney::NonExistentWmidError unless doc.at('/response/certinfo/attestat')
   end
 
   def retval_find_wm(doc)

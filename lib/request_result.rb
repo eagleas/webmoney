@@ -5,7 +5,13 @@ module Webmoney::RequestResult    # :nodoc:all
   end
 
   def result_get_passport(doc)
-    Webmoney::Passport.new(doc)
+    tid = doc.at('/response/certinfo/attestat/row')['tid'].to_i
+    recalled = doc.at('/response/certinfo/attestat/row')['recalled'].to_i
+    locked = doc.at('/response/certinfo/userinfo/value/row')['locked'].to_i
+    { # TODO more attestat fields...
+      :attestat => ( recalled + locked > 0) ? Webmoney::Passport::ALIAS : tid,
+      :created_at => Time.xmlschema(doc.at('/response/certinfo/attestat/row')['datecrt'])
+    }
   end
 
   def result_bussines_level(doc)

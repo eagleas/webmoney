@@ -91,10 +91,6 @@ module Webmoney
       @wm.errormsg.should match(%r{неверно указан проверяемый WMID})
     end
 
-    it "should get_passport" do
-      @wm.request(:get_passport, :wmid => @wm.wmid).should be_instance_of(Passport)
-    end
-
     it "should raise exception on bad WMID" do
       lambda {@wm.request(:get_passport, :wmid => '111')}.should raise_error(Webmoney::ResultError)
     end

@@ -102,6 +102,7 @@ module Webmoney
 
     # initialize workers by self
     Purse.worker = self
+    Passport.worker = self
   end
 
   # Webmoney instance is classic type?
