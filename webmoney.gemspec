@@ -6,6 +6,13 @@ Gem::Specification.new do |s|
   s.author = "Alexander Oryol"
   s.email =  "eagle.alex@gmail.com"
   s.summary = "Webmoney interfaces and native wmsigner"
+  s.description =
+<<DESC
+This library should help to make requests to WebMoney Transfer http://www.wmtransfer.com
+XML-interfaces: http://www.wmtransfer.com/eng/developers/interfaces/index.shtml
+Gem have built-in native wmsigner tool.
+DESC
+
   s.has_rdoc = true
   s.files = [ "rakefile",
               "ChangeLog",
@@ -15,8 +22,9 @@ Gem::Specification.new do |s|
               "lib/certs/AddTrust_External_Root.crt",
               "lib/certs/WebMoneyCA.crt",
               "lib/messenger.rb",
-              "lib/request.rb",
-              "lib/result.rb",
+              "lib/request_result.rb",
+              "lib/request_retval.rb",
+              "lib/request_xml.rb",
               "lib/passport.rb",
               "lib/purse.rb",
               "lib/webmoney.rb",
