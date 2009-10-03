@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "webmoney"
-  s.version = "0.0.4.7"
+  s.version = "0.0.4.8"
   s.homepage = "http://github.com/eagleas/webmoney"
   s.rubyforge_project = 'webmoney'
   s.author = "Alexander Oryol"
