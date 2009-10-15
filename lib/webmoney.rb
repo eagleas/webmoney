@@ -22,32 +22,6 @@ module Webmoney
   include RequestRetval
   include RequestResult
 
-  # Constants
-
-  W3S = 'https://w3s.wmtransfer.com/asp/'
-  INTERFACES = {
-    'create_invoice'      => W3S + 'XMLInvoice.asp',       # x1
-    'create_transaction'  => W3S + 'XMLTrans.asp',         # x2
-    'operation_history'   => W3S + 'XMLOperations.asp',    # x3
-    'outgoing_invoices'   => W3S + 'XMLOutInvoices.asp',   # x4
-    'finish_protect'      => W3S + 'XMLFinishProtect.asp', # x5
-    'send_message'        => W3S + 'XMLSendMsg.asp',       # x6
-    'check_sign'          => W3S + 'XMLClassicAuth.asp',   # x7
-    'find_wm'             => W3S + 'XMLFindWMPurse.asp',   # x8
-    'balance'             => W3S + 'XMLPurses.asp',        # x9
-    'incoming_invoices'   => W3S + 'XMLInInvoices.asp',    # x10
-    'get_passport'        => 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp', # x11
-    'reject_protection'   => W3S + 'XMLRejectProtect.asp', # x13
-    'transaction_moneyback' => W3S + 'XMLTransMoneyback.asp', # x14
-    'i_trust'             => W3S + 'XMLTrustList.asp',     # x15
-    'trust_me'            => W3S + 'XMLTrustList2.asp',    # x15
-    'trust_save'          => W3S + 'XMLTrustSave2.asp',    # x15
-    'create_purse'        => W3S + 'XMLCreatePurse.asp',   # x16
-    'create_contract' => 'https://arbitrage.webmoney.ru/xml/X17_CreateContract.aspx', # x17
-    'transaction_get' => 'https://merchant.webmoney.ru/conf/xml/XMLTransGet.asp', # x18
-    'bussines_level'  => 'https://stats.wmtransfer.com/levels/XMLWMIDLevel.aspx'
-  }
-
   # Error classes
   class WebmoneyError < StandardError; end
   class RequestError < WebmoneyError;  end
@@ -59,6 +33,38 @@ module Webmoney
   
   attr_reader :wmid, :error, :errormsg, :last_request
   attr_accessor :messenger
+
+
+  # Preset for W3S
+  def w3s_url
+    'https://w3s.wmtransfer.com/asp/'
+  end
+
+  # Presets for interfaces
+  def interface_urls
+    {
+      :create_invoice      => w3s_url + 'XMLInvoice.asp',       # x1
+      :create_transaction  => w3s_url + 'XMLTrans.asp',         # x2
+      :operation_history   => w3s_url + 'XMLOperations.asp',    # x3
+      :outgoing_invoices   => w3s_url + 'XMLOutInvoices.asp',   # x4
+      :finish_protect      => w3s_url + 'XMLFinishProtect.asp', # x5
+      :send_message        => w3s_url + 'XMLSendMsg.asp',       # x6
+      :check_sign          => w3s_url + 'XMLClassicAuth.asp',   # x7
+      :find_wm             => w3s_url + 'XMLFindWMPurse.asp',   # x8
+      :balance             => w3s_url + 'XMLPurses.asp',        # x9
+      :incoming_invoices   => w3s_url + 'XMLInInvoices.asp',    # x10
+      :get_passport        => 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp', # x11
+      :reject_protection   => w3s_url + 'XMLRejectProtect.asp', # x13
+      :transaction_moneyback => w3s_url + 'XMLTransMoneyback.asp', # x14
+      :i_trust             => w3s_url + 'XMLTrustList.asp',     # x15
+      :trust_me            => w3s_url + 'XMLTrustList2.asp',    # x15
+      :trust_save          => w3s_url + 'XMLTrustSave2.asp',    # x15
+      :create_purse        => w3s_url + 'XMLCreatePurse.asp',   # x16
+      :create_contract => 'https://arbitrage.webmoney.ru/xml/X17_CreateContract.aspx', # x17
+      :transaction_get => 'https://merchant.webmoney.ru/conf/xml/XMLTransGet.asp', # x18
+      :bussines_level  => 'https://stats.wmtransfer.com/levels/XMLWMIDLevel.aspx'
+    }
+  end
 
 
   # Required options:
@@ -102,8 +108,7 @@ module Webmoney
     @ic_in = Iconv.new('UTF-8', 'CP1251')
     @ic_out = Iconv.new('CP1251', 'UTF-8')
 
-    # prepare urls
-    @interfaces = INTERFACES.inject({}){|m,k| m.merge!(k[0] => URI.parse(k[1]))}
+    prepare_interface_urls
 
     # initialize workers by self
     Purse.worker = self
@@ -157,15 +162,20 @@ module Webmoney
 
   protected
 
+  def prepare_interface_urls
+    @interfaces = interface_urls.inject({}){|m,k| m.merge!(k[0] => URI.parse(k[1]))}
+  end
+
   # Make HTTPS request, return result body if 200 OK
 
   def https_request(iface, xml)
     url = case iface
       when Symbol
-        @interfaces[iface.to_s]
+        @interfaces[iface]
       when String
         URI.parse(iface)
     end
+    raise ArgumentError, iface unless url
     http = Net::HTTP.new(url.host, url.port)
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     if File.file? @ca_cert
