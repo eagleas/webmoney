@@ -22,6 +22,32 @@ module Webmoney
   include RequestRetval
   include RequestResult
 
+  # Constants
+
+  W3S = 'https://w3s.wmtransfer.com/asp/'
+  INTERFACES = {
+    'create_invoice'      => W3S + 'XMLInvoice.asp',       # x1
+    'create_transaction'  => W3S + 'XMLTrans.asp',         # x2
+    'operation_history'   => W3S + 'XMLOperations.asp',    # x3
+    'outgoing_invoices'   => W3S + 'XMLOutInvoices.asp',   # x4
+    'finish_protect'      => W3S + 'XMLFinishProtect.asp', # x5
+    'send_message'        => W3S + 'XMLSendMsg.asp',       # x6
+    'check_sign'          => W3S + 'XMLClassicAuth.asp',   # x7
+    'find_wm'             => W3S + 'XMLFindWMPurse.asp',   # x8
+    'balance'             => W3S + 'XMLPurses.asp',        # x9
+    'incoming_invoices'   => W3S + 'XMLInInvoices.asp',    # x10
+    'get_passport'        => 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp', # x11
+    'reject_protection'   => W3S + 'XMLRejectProtect.asp', # x13
+    'transaction_moneyback' => W3S + 'XMLTransMoneyback.asp', # x14
+    'i_trust'             => W3S + 'XMLTrustList.asp',     # x15
+    'trust_me'            => W3S + 'XMLTrustList2.asp',    # x15
+    'trust_save'          => W3S + 'XMLTrustSave2.asp',    # x15
+    'create_purse'        => W3S + 'XMLCreatePurse.asp',   # x16
+    'create_contract' => 'https://arbitrage.webmoney.ru/xml/X17_CreateContract.aspx', # x17
+    'transaction_get' => 'https://merchant.webmoney.ru/conf/xml/XMLTransGet.asp', # x18
+    'bussines_level'  => 'https://stats.wmtransfer.com/levels/XMLWMIDLevel.aspx'
+  }
+
   # Error classes
   class WebmoneyError < StandardError; end
   class RequestError < WebmoneyError;  end
@@ -32,7 +58,7 @@ module Webmoney
   class CaCertificateError < WebmoneyError; end
   
   attr_reader :wmid, :error, :errormsg, :last_request
-  attr_accessor :interfaces, :messenger
+  attr_accessor :messenger
 
 
   # Required options:
@@ -72,33 +98,12 @@ module Webmoney
         opt[:ca_cert]
       end
 
-    w3s = 'https://w3s.wmtransfer.com/asp/'
-
-    @interfaces = {
-      'create_invoice'  => URI.parse( w3s + 'XMLInvoice.asp' ), # x1
-      'create_transaction'  => URI.parse( w3s + 'XMLTrans.asp' ), # x2
-      'operation_history'  => URI.parse( w3s + 'XMLOperations.asp' ), # x3
-      'outgoing_invoices'  => URI.parse( w3s + 'XMLOutInvoices.asp' ), # x4
-      'finish_protect'  => URI.parse( w3s + 'XMLFinishProtect.asp' ), # x5
-      'send_message'  => URI.parse( w3s + 'XMLSendMsg.asp'), # x6
-      'check_sign'  => URI.parse( w3s + 'XMLClassicAuth.asp'), # x7
-      'find_wm'  => URI.parse( w3s + 'XMLFindWMPurse.asp'), # x8
-      'balance'  => URI.parse( w3s + 'XMLPurses.asp'), # x9
-      'incoming_invoices' => URI.parse( w3s + 'XMLInInvoices.asp'), # x10
-      'get_passport' => URI.parse( 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp'), # x11
-      'reject_protection' => URI.parse( w3s + 'XMLRejectProtect.asp'), # x13
-      'transaction_moneyback' => URI.parse( w3s + 'XMLTransMoneyback.asp'), # x14
-      'i_trust'  => URI.parse( w3s + 'XMLTrustList.asp'), # x15
-      'trust_me'  => URI.parse( w3s + 'XMLTrustList2.asp'), # x15
-      'trust_save'  => URI.parse( w3s + 'XMLTrustSave2.asp'), # x15
-      'create_purse'  => URI.parse( w3s + 'XMLCreatePurse.asp'), # x16
-      'create_contract' => URI.parse( 'https://arbitrage.webmoney.ru/xml/X17_CreateContract.aspx'), # x17
-      'transaction_get' => URI.parse( 'https://merchant.webmoney.ru/conf/xml/XMLTransGet.asp'), # x18
-      'bussines_level'  => URI.parse( 'https://stats.wmtransfer.com/levels/XMLWMIDLevel.aspx')
-    }
     # Iconv.new(to, from)
     @ic_in = Iconv.new('UTF-8', 'CP1251')
     @ic_out = Iconv.new('CP1251', 'UTF-8')
+
+    # prepare urls
+    @interfaces = INTERFACES.inject({}){|m,k| m.merge!(k[0] => URI.parse(k[1]))}
 
     # initialize workers by self
     Purse.worker = self
