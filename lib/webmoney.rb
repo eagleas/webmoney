@@ -7,8 +7,7 @@ require 'net/http'
 require 'net/https'
 require 'rubygems'
 require 'iconv'
-require 'builder'
-require 'hpricot'
+require 'nokogiri'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 %w(wmsigner wmid passport purse request_xml request_retval request_result messenger).each { |lib| require lib }
@@ -148,7 +147,7 @@ module Webmoney
     res = https_request(iface, make_xml(iface, opt))
 
     # Parse response
-    doc = Hpricot.XML(res)
+    doc = Nokogiri::XML(res)
     parse_retval(iface, doc)
     make_result(iface, doc)
   end
@@ -190,9 +189,7 @@ module Webmoney
     result = http.post( url.path, xml, "Content-Type" => "text/xml" )
     case result
       when Net::HTTPSuccess
-        # replace root tag for Hpricot
-        res = result.body.gsub(/(w3s\.response|WMIDLevel\.response)/,'w3s_response')
-        return @ic_in.iconv(res)
+        result.body
       else
         @error = result.code
         @errormsg = result.body if result.class.body_permitted?()
@@ -210,7 +207,7 @@ module Webmoney
 
   def make_xml(iface, opt)            # :nodoc:
     iface_func = "xml_#{iface}"
-    send(iface_func, opt).target!
+    send(iface_func, opt).to_xml
   end
 
   def parse_retval(iface, doc)         # :nodoc:

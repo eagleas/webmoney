@@ -36,9 +36,8 @@ module Webmoney
     end
     
     it "should send request" do
-      r = @wm.send(:https_request, :check_sign, '<w3s.request/>')
-      doc = Hpricot.XML(r.gsub(/w3s\.response/,'w3s_response'))
-      doc.at('w3s_response').should_not be_nil
+      doc = Nokogiri.XML(@wm.send(:https_request, :check_sign, '<w3s.request/>'))
+      doc.root.should_not be_nil
     end
 
     it"should raise error on bad response" do
@@ -80,9 +79,13 @@ module Webmoney
     it "should check_sign with specials" do
       plan = '<test>текст</test>'
       real_plan = Iconv.conv('CP1251', 'UTF-8', plan)
-      @wm.request(:check_sign, 
-        :wmid => @wm.wmid, :plan => plan, :sign => @wm.send(:sign, real_plan )).
-        should be_true
+      begin
+      @wm.request(:check_sign,
+        :wmid => @wm.wmid,
+        :plan => plan,
+        :sign => @wm.send(:sign, real_plan )
+      ).should be_true
+      end
     end
     
     it "should parse retval and raise error on broken get_passport" do

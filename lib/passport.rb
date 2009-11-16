@@ -1,5 +1,3 @@
-require 'hpricot'
-
 # Class for store attestat information
 module Webmoney
   class Passport < Wmid

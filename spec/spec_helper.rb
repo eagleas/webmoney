@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'test/unit'
 require 'spec'
-require 'hpricot'
 require 'ostruct'
 require 'yaml'
 require 'time'

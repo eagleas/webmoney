@@ -57,6 +57,5 @@ DESC
               "spec/unit/wmid_spec.rb" ]
   s.extensions << 'ext/wmsigner/extconf.rb'
   s.extra_rdoc_files = ["ChangeLog", "README"]
-  s.add_dependency('hpricot')
-  s.add_dependency('builder')
+  s.add_dependency('nokogiri')
 end
