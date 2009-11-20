@@ -15,13 +15,14 @@ module Webmoney
     it "request result get_passport should be Hash" do
       @wm.request(:get_passport, :wmid => @wm.wmid).should be_instance_of(Hash)
     end
-    
+
     it "should return correct data" do
       wmid = '000000000007'
       p = Passport.new(wmid)
       p.wmid.should == wmid
       p.attestat[:attestat].should == Webmoney::Passport::REGISTRATOR
       p.attestat[:created_at].strftime('%Y-%m-%d %H:%M:%S').should == '2004-02-25 21:54:01'
+      p.full_access.should be_false
       
       wmid = '370860915669'
       p = Passport.new(wmid)

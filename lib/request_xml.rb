@@ -10,7 +10,8 @@ module Webmoney::RequestXML    # :nodoc:all
           x.info opt[:info] || 1
           x.mode opt[:mode] || 0
         }
-        x.sign sign(@wmid + opt[:wmid]) if classic?
+        # unless mode == 1, signed data need'nt
+        x.sign( (classic? && opt[:mode]) ? sign(@wmid + opt[:wmid]) : nil )
       }
     }
   end

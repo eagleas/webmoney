@@ -5,12 +5,20 @@ module Webmoney::RequestResult    # :nodoc:all
   end
 
   def result_get_passport(doc)
-    tid = doc.at('/response/certinfo/attestat/row')['tid'].to_i
-    recalled = doc.at('/response/certinfo/attestat/row')['recalled'].to_i
-    locked = doc.at('/response/certinfo/userinfo/value/row')['locked'].to_i
-    { # TODO more attestat fields...
-      :attestat => ( recalled + locked > 0) ? Webmoney::Passport::ALIAS : tid,
-      :created_at => Time.xmlschema(doc.at('/response/certinfo/attestat/row')['datecrt'])
+    root = doc.xpath('/response')
+
+    # We use latest attestat
+    attestat = root.xpath('certinfo/attestat/row')[0]
+
+    tid = attestat['tid'].to_i
+    recalled = attestat['recalled'].to_i
+    locked = root.xpath('certinfo/userinfo/value/row')[0]['locked'].to_i
+    {
+      :full_access => root.xpath('fullaccess')[0].text == '1',
+      :attestat => {
+        :attestat => (recalled + locked > 0) ? Webmoney::Passport::ALIAS : tid,
+        :created_at => Time.xmlschema(attestat['datecrt'])}.
+        merge(attestat.attributes.inject({}){|memo, a| memo.merge!(a[0] => a[1].value) })
     }
   end
 

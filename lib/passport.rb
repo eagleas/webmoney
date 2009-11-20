@@ -16,8 +16,6 @@ module Webmoney
     SERVICE2    = 200
     OPERATOR    = 300
 
-    attr_reader :attestat
-
     def self.worker= (worker)
       @@worker = worker
     end
@@ -26,9 +24,23 @@ module Webmoney
       @@worker
     end
 
+    # memoize data
+
     def attestat
-      # memoize
-      @attestat ||= @@worker.request(:get_passport, :wmid => self)
+      @attestat ||= getinfo[:attestat]
+    end
+
+    def full_access
+      @full_access = getinfo[:full_access]
+    end
+
+    protected
+
+    def getinfo
+      info = @@worker.request(:get_passport, :wmid => self)
+      @attestat = info[:attestat]
+      @full_access = info[:full_access]
+      info
     end
 
   end
