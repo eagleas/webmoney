@@ -12,8 +12,13 @@ module Webmoney
       Passport.new(@wm.wmid).should be_instance_of(Passport)
     end
 
-    it "request result get_passport should be Hash" do
-      @wm.request(:get_passport, :wmid => @wm.wmid).should be_instance_of(Hash)
+    it "request result get_passport should be Hash with data" do
+      res = @wm.request(:get_passport, :wmid => @wm.wmid)
+      res.should be_instance_of(Hash)
+      res[:full_access].should be_false
+      res[:attestat].should_not be_nil
+      res[:wmids][@wm.wmid][:created_at].class.should == Time
+      res[:userinfo].should_not be_nil
     end
 
     it "should return correct data" do

@@ -5,21 +5,7 @@ module Webmoney::RequestResult    # :nodoc:all
   end
 
   def result_get_passport(doc)
-    root = doc.xpath('/response')
-
-    # We use latest attestat
-    attestat = root.xpath('certinfo/attestat/row')[0]
-
-    tid = attestat['tid'].to_i
-    recalled = attestat['recalled'].to_i
-    locked = root.xpath('certinfo/userinfo/value/row')[0]['locked'].to_i
-    {
-      :full_access => root.xpath('fullaccess')[0].text == '1',
-      :attestat => {
-        :attestat => (recalled + locked > 0) ? Webmoney::Passport::ALIAS : tid,
-        :created_at => Time.xmlschema(attestat['datecrt'])}.
-        merge(attestat.attributes.inject({}){|memo, a| memo.merge!(a[0] => a[1].value) })
-    }
+    Webmoney::Passport.parse_result(doc)
   end
 
   def result_bussines_level(doc)
