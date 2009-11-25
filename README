@@ -63,10 +63,16 @@ wmid = '111222333444'
 
 Get attestat data:
 passport = Webmoney::Passport.new(wmid)
-passport.attestat     # { # Hash
+passport.attestat     # { # hash
                       #   :attestat => 110, # == FORMAL attestat, as example
                       #   :created_at => Wed Feb 25 21:54:01 +0300 2004 # Time object
+                      #   :cid => "103453"
+                      #   and etc.
                       # }
+passport.wmids        # All wmids attached to the attestat
+passport.userinfo[:country]          # => 'Russia' # Userinfo fields in string context
+passport.userinfo[:country].checked  # => true     # with checked/locked attribute
+passport.directory    # Base dictionary
 
 = Bussines level
 

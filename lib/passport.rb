@@ -30,14 +30,10 @@ module Webmoney
     end
 
     # memoize data
-
-    def attestat
-      @attestat ||= getinfo[:attestat]
-    end
-
-    def full_access
-      @full_access = getinfo[:full_access]
-    end
+    def attestat; @attestat ||= getinfo[:attestat] end
+    def directory; @directory ||= getinfo[:directory] end
+    def full_access; @full_access = getinfo[:full_access] end
+    def userinfo; @userinfo ||= getinfo[:userinfo] end
 
     protected
 
@@ -45,28 +41,36 @@ module Webmoney
       info = @@worker.request(:get_passport, :wmid => self)
       @attestat = info[:attestat]
       @full_access = info[:full_access]
+      @userinfo = info[:userinfo]
+      @directory = info[:directory]
       info
     end
 
     def self.parse_result(doc)
-      root = doc.xpath('/response')
+      root = doc.at('/response')
 
       # We use latest attestat
-      attestat = root.xpath('certinfo/attestat/row')[0]
+      att_elm = root.at('certinfo/attestat/row')
 
-      tid = attestat['tid'].to_i
-      recalled = attestat['recalled'].to_i
-      locked = root.xpath('certinfo/userinfo/value/row')[0]['locked'].to_i
+      tid = att_elm['tid'].to_i
+      recalled = att_elm['recalled'].to_i
+      locked = root.at('certinfo/userinfo/value/row')['locked'].to_i
 
-      userinfo = root.xpath('certinfo/userinfo/value/row')[0].attributes.inject({}) { |memo, a|
-          a[1].value.empty? ? memo : memo.merge!(a[0].to_sym => Attribute.new(a[1].value))
+      attestat = {
+        :attestat => (recalled + locked > 0) ? ALIAS : tid,
+        :created_at => Time.xmlschema(att_elm['datecrt'])
       }
-      root.xpath('certinfo/userinfo/check-lock/row')[0].attributes.each_pair do |k,v|
+      attestat.merge!( att_elm.attributes.inject({}) do |memo, a|
+        a[1].value.empty? ? memo : memo.merge!(a[0].to_sym => a[1].value)
+      end )
+
+      userinfo = root.at('certinfo/userinfo/value/row').attributes.inject({}) { |memo, a|
+        memo.merge!(a[0].to_sym => Attribute.new(a[1].value.strip))
+      }
+      root.at('certinfo/userinfo/check-lock/row').attributes.each_pair do |k,v|
         attr = userinfo[k.to_sym]
-        unless attr.nil?
-          attr.checked = v[0] == '1'
-          attr.locked  = v[1] == '1'
-        end
+        attr.checked = v.to_s[0,1] == '1'
+        attr.locked  = v.to_s[1,2] == '1'
       end
 
       wmids = root.xpath('certinfo/wmids/row').inject({}) do |memo, elm|
@@ -76,15 +80,22 @@ module Webmoney
         memo.merge!(elm['wmid'] => attrs)
       end
 
-      {
-        :full_access => root.xpath('fullaccess')[0].text == '1',
-        :attestat => {
-          :attestat => (recalled + locked > 0) ? ALIAS : tid,
-          :created_at => Time.xmlschema(attestat['datecrt'])}.
-          merge(attestat.attributes.inject({}){|memo, a| a[1].value.empty? ? memo : memo.merge!(a[0].to_sym => a[1].value) }),
-        :userinfo => userinfo,
-        :wmids => wmids
+      if dir = root.at('directory')
+        directory = {
+          :ctype => dir.xpath('ctype').inject({}){|memo, node| memo.merge!(node['id'].to_i => node.text)},
+          :jstatus => dir.xpath('jstatus').inject({}){|memo, node| memo.merge!(node['id'].to_i => node.text)},
+          :types => dir.xpath('tid').inject({}){|memo, node| memo.merge!(node['id'].to_i => node.text)}
+        }
+      end
+
+      result = {
+        :full_access => root.at('fullaccess').text == '1',
+        :attestat => attestat,
+        :wmids => wmids,
+        :userinfo => userinfo
       }
+      result.merge!(:directory => directory) if dir
+      result
     end
 
   end
