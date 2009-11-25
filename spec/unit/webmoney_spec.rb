@@ -9,7 +9,7 @@ module Webmoney
     end
 
     it "should be classic" do
-      @wm.classic?.should be_true
+      @wm.should be_classic # @wm.classic? == true
     end
     
     it "should return reqn" do
@@ -18,6 +18,16 @@ module Webmoney
       t2 = @wm.send(:reqn)
       t1.should match(/^\d{16}$/)
       (t2 > t1).should be_true
+    end
+
+    it "should correct prepare interfaces urls" do
+      wm = TestWM.new :wmid => WmConfig.wmid
+      wm.should_not be_classic
+      wm.interfaces[:balance].class.should == URI::HTTPS
+      # converted to light-auth version
+      wm.interfaces[:balance].to_s.should == 'https://w3s.wmtransfer.com/asp/XMLPursesCert.asp'
+      # non-converted to light-auth version
+      wm.interfaces[:get_passport].to_s.should == 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp'
     end
 
     it "should correct reqn" do

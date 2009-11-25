@@ -30,7 +30,7 @@ module Webmoney
   class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
   
-  attr_reader :wmid, :error, :errormsg, :last_request
+  attr_reader :wmid, :error, :errormsg, :last_request, :interfaces
   attr_accessor :messenger
 
 
@@ -162,7 +162,11 @@ module Webmoney
   protected
 
   def prepare_interface_urls
-    @interfaces = interface_urls.inject({}){|m,k| m.merge!(k[0] => URI.parse(k[1]))}
+    @interfaces = interface_urls.inject({}) do |m,k|
+      url = k[1]
+      url.sub!(/(\.asp)/, 'Cert.asp') if !classic? && url.match("^"+w3s_url)
+      m.merge!(k[0] => URI.parse(url))
+    end
   end
 
   # Make HTTPS request, return result body if 200 OK
