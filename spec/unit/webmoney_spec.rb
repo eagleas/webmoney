@@ -130,7 +130,11 @@ module Webmoney
       result[:id].should match(/^\d*$/)
       ((result[:date] + 60) > Time.now).should be_true
     end
-    
+
+    it "should create transaction" do
+      # TODO @wm.request( :create_transaction, ...)
+    end
+
     it "should raise error on undefined xml func" do
       lambda { @wm.request(:unexistent_interface) }.should raise_error(::NoMethodError)
     end

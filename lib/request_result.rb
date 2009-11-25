@@ -27,4 +27,14 @@ module Webmoney::RequestResult    # :nodoc:all
     }
   end
 
+  def result_create_transaction(doc)
+    op = doc.at('//operation')
+    {
+      :operation_id => op['id'],
+      :operation_ts => op['ts']
+    }.merge( op.children.inject({}) do |memo, elm|
+      memo.merge!(elm.name.to_sym => elm.text)
+    end )
+  end
+
 end

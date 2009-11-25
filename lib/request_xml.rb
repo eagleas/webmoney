@@ -82,4 +82,26 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
+    def xml_create_transaction(opt)
+    req = reqn()
+    desc = @ic_out.iconv(opt[:desc])                  # description
+    Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
+      x.send('w3s.request') {
+        x.reqn req
+        x.wmid(@wmid) if classic?
+          x.sign sign(@plan) if classic?
+        x.trans {
+          x.tranid opt[:transid]                      # transaction id - unique
+          x.pursesrc opt[:pursesrc]                   # sender purse
+          x.pursedest opt[:pursedest]                 # recipient purse
+          x.amount opt[:amount]
+          x.period( opt[:period] || 0 )                # protection period (0 - no protection)
+          x.pcode( opt[:pcode].strip ) if opt[:period] > 0 && opt[:pcode]  # protection code
+          x.desc desc
+          x.wminvid( opt[:wminvid] || 0 )             # invoice number (0 - without invoice)
+        }
+      }
+    }
+  end
+
 end
