@@ -1,17 +1,12 @@
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
-require 'tools/rakehelp'
+require 'rake/extensiontask'
 require 'spec/rake/spectask'
 
-GEM_VERSION="0.0.4.7"
+CLEAN.include ["ext/wmsigner/*.{so,o}", "ext/wmsigner/Makefile", "lib/wmsigner.so", "pkg", "tmp"]
 
-setup_extension('wmsigner', 'wmsigner')
-
-desc "Compiles native extensions"
-task :compile => [:wmsigner]
-
-task :default => [:compile, :spec]
+Rake::ExtensionTask.new('wmsigner')
 
 Spec::Rake::SpecTask.new do |task|
   task.libs << 'spec'
@@ -19,31 +14,27 @@ Spec::Rake::SpecTask.new do |task|
   task.verbose = true
 end
 
-gemspec = Gem::Specification.new do |gemspec|
-  gemspec.name = "webmoney"
-  gemspec.version = GEM_VERSION
-  gemspec.author = "Alexander Oryol"
-  gemspec.email =  "eagle.alex@gmail.com"
-  gemspec.summary = "Webmoney interfaces and native wmsigner"
-  gemspec.files = %w( rakefile ChangeLog lib/WebMoneyCA.crt ) +
-                  Dir.glob( 'lib/*.rb' ) +
-                  Dir.glob( 'spec/*.rb' ) +
-                  Dir.glob( 'spec/unit/*.rb' ) +
-                  Dir.glob( 'ext/**/*.{h,cpp,rb}' ) +
-                  Dir.glob( 'tools/*.rb' )
-  gemspec.autorequire = 'webmoney'
-  gemspec.require_path = 'lib'
-  gemspec.add_dependency('nokogiri')
-  gemspec.add_dependency('iconv')
+spec = begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "webmoney"
+    gemspec.authors = ["Alexander Oryol"]
+    gemspec.email =  "eagle.alex@gmail.com"
+    gemspec.summary = "Webmoney interfaces and native wmsigner"
+    gemspec.add_dependency('nokogiri')
+    gemspec.files << %w( rakefile ChangeLog lib/WebMoneyCA.crt ) +
+                      Dir.glob( 'ext/**/*.{h,cpp,rb}' ) +
+                      Dir.glob( 'tools/*.rb' )
 
-  if RUBY_PLATFORM.match("win32")
-    gemspec.platform = Gem::Platform::WIN32
-    gemspec.files += []
-  else
-    gemspec.platform = Gem::Platform::RUBY
-    gemspec.extensions = Dir.glob( 'ext/**/extconf.rb' )
+    if RUBY_PLATFORM.match("win32")
+      gemspec.platform = Gem::Platform::WIN32
+      gemspec.files += []
+    else
+      gemspec.platform = Gem::Platform::RUBY
+      gemspec.extensions = Dir.glob( 'ext/**/extconf.rb' )
+    end
   end
+
+rescue LoadError
+  puts "Jeweler not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
 end
-
-CLEAN.include ["ext/wmsigner/*.{so,o}", "ext/wmsigner/Makefile", "lib/wmsigner.so", "pkg", "*.gem"]
-
