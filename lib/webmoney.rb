@@ -83,8 +83,7 @@ module Webmoney
 
   def initialize(opt = {})
 
-    if Nokogiri::VERSION_INFO['libxml']['compiled'].gsub(/\./, '').to_i < 270 ||
-         Nokogiri::VERSION_INFO['libxml']['loaded'].gsub(/\./, '').to_i < 270
+    unless check_libxml_version
       $stderr.puts "WARNING: webmoney lib will incorrect work with nokogori compiled with libxml2 version < 2.7.0"
     end
 
@@ -232,6 +231,14 @@ module Webmoney
   def make_result(iface, doc)         # :nodoc:
     iface_result = "result_#{iface}"
     send(iface_result, doc)
+  end
+
+  def check_libxml_version
+    libxml = Nokogiri::VERSION_INFO['libxml']
+    [libxml['compiled'], libxml['loaded']].each do |ver|
+      major, minor = ver.match(/^(\d+)\.(\d+).*/).to_a[1,2].map(&:to_i)
+      return false if major < 2 or minor < 7
+    end
   end
 
 end
