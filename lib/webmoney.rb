@@ -30,7 +30,7 @@ module Webmoney
   class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
   
-  attr_reader :wmid, :error, :errormsg, :last_request, :interfaces
+  attr_reader :wmid, :error, :errormsg, :last_request, :last_response, :interfaces
   attr_accessor :messenger
 
 
@@ -177,6 +177,7 @@ module Webmoney
   # Make HTTPS request, return result body if 200 OK
 
   def https_request(iface, xml)
+    @last_request = @last_response = nil
     url = case iface
       when Symbol
         @interfaces[iface]
@@ -195,7 +196,7 @@ module Webmoney
     end
     http.use_ssl = true
     @last_request = xml
-    result = http.post( url.path, xml, "Content-Type" => "text/xml" )
+    @last_response = result = http.post( url.path, xml, "Content-Type" => "text/xml" )
     case result
       when Net::HTTPSuccess
         result.body
