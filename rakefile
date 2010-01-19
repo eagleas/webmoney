@@ -18,6 +18,7 @@ spec = begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "webmoney"
+    gemspec.rubyforge_project = 'webmoney'
     gemspec.authors = ["Alexander Oryol"]
     gemspec.email =  "eagle.alex@gmail.com"
     gemspec.summary = "Webmoney interfaces and native wmsigner"

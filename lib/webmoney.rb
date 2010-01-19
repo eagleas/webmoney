@@ -83,6 +83,11 @@ module Webmoney
 
   def initialize(opt = {})
 
+    if Nokogiri::VERSION_INFO['libxml']['compiled'].gsub(/\./, '').to_i < 270 ||
+         Nokogiri::VERSION_INFO['libxml']['loaded'].gsub(/\./, '').to_i < 270
+      $stderr.puts "WARNING: webmoney lib will incorrect work with nokogori compiled with libxml2 version < 2.7.0"
+    end
+
     @wmid = Wmid.new(opt[:wmid])
 
     # classic or light

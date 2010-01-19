@@ -5,6 +5,8 @@ XML-interfaces: http://www.wmtransfer.com/eng/developers/interfaces/index.shtml
 
 Gem have built-in native *wmsigner*.
 
+Reqirements: Nokogiri >= 1.4.1 built with libxml2 >= 2.7 (IMPORTANT!)
+
 Author::    Alexander Oryol (mailto:eagle.alex@gmail.com)
 License::   MIT License
 
