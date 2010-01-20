@@ -84,7 +84,7 @@ module Webmoney
   def initialize(opt = {})
 
     unless check_libxml_version
-      $stderr.puts "WARNING: webmoney lib will incorrect work with nokogori compiled with libxml2 version < 2.7.0"
+      $stderr.puts "WARNING: webmoney lib will not work correctly with nokogori compiled with libxml2 version < 2.7.0"
     end
 
     @wmid = Wmid.new(opt[:wmid])
