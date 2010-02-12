@@ -1,5 +1,13 @@
 ChangeLog
 
+Fri Feb 12 2010 11:22:35 + 0400
+----------------------------
+  V 0.0.5
+  * Using Nokogiri instead Hpricot+Builder, incompatible with libxml2 < 2.7.0
+  * Using jeweler+rake-compiler
+  * Complete parse attestat fields (X11)
+  * Add X2-Create transaction
+
 Sat Oct 03 2009 16:18:00 + 0400
 ----------------------------
   V 0.0.4.8

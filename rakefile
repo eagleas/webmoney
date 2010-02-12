@@ -1,7 +1,12 @@
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
-require 'rake/extensiontask'
+begin
+  require 'rake/extensiontask'
+rescue LoadError
+  puts "Rake-compiler not available. Install it with: sudo gem install rake-compiler"
+  exit 1
+end
 require 'spec/rake/spectask'
 
 CLEAN.include ["ext/wmsigner/*.{so,o}", "ext/wmsigner/Makefile", "lib/wmsigner.so", "pkg", "tmp"]
