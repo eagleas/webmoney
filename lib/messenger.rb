@@ -18,7 +18,7 @@ module Webmoney
               logger.call(msg, result)
               # Requeue message on fail
               @queue.push(msg) unless result.kind_of?(Hash)
-            rescue ResultError, ResponseError => e
+            rescue ResultError => e
               logger.call(msg, e)
               # Requeue message
               @queue.push(msg)

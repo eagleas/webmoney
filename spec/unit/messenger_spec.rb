@@ -31,9 +31,13 @@ module Webmoney
     end
 
     it "should call request(:send_message) twice" do
+      # if spec failed here, increase sleep time
       @wm.should_receive(:request).
         with(:send_message, @params).twice().and_return({:test => 'test'})
       2.times {@wm.send_message(@params)}
+      # Don't take:
+      # @wm.messenger.thread.join
+      # this will create deadlock
       sleep(2)
     end
 

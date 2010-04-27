@@ -47,13 +47,14 @@ module Webmoney
         :nickname=>"Арбитр",
         :country=>"Россия",
         :inndoc=>"0",
+        :sex=>"0",
         :email=>"", :pdateMMDDYYYY => "", :pday => "", :pmonth => "", :pyear => "",
         :iname=>"", :inn=>"", :okonx=>"", :bik=>"", :pbywhom=>"", :phonemobile=>"", :rcountry=>"",
         :bmonth=>"", :jadres=>"", :okpo=>"", :bday=>"", :pnomer=>"", :bankname=>"", :pcountry=>"", :pcountryid=>"",
         :jcountryid=>"", :ks=>"", :infoopen=>"", :icq=>"", :byear=>"", :oname=>"", :osnovainfo=>"", :dirfio=>"",
         :pdate=>"", :bplace=>"", :rs=>"", :rcity=>"", :adres=>"", :phone=>"", :buhfio=>"", :radres=>"", :fname=>"",
         :phonehome=>"", :jcity=>"", :name=>"", :pcity=>"", :jstatus=>"", :fax=>"", :zipcode=>"", :rcountryid=>"",
-        :web=>"", :jzipcode=>"", :jcountry=>""
+        :web=>"", :jzipcode=>"", :jcountry=>"", :jabberid=>""
       }
 
 #      a1 = res[:userinfo].keys.map(&:to_s).sort
@@ -108,12 +109,16 @@ module Webmoney
       p.attestat[:attestat].should == Webmoney::Passport::REGISTRATOR
       p.attestat[:created_at].strftime('%Y-%m-%d %H:%M:%S').should == '2004-02-25 21:54:01'
       p.full_access.should be_false
-      
+
       wmid = '370860915669'
       p = Passport.new(wmid)
       p.wmid.should == wmid
       p.attestat[:attestat].should == Webmoney::Passport::ALIAS
       p.attestat[:created_at].strftime('%Y-%m-%d %H:%M:%S').should == '2006-04-19 10:16:30'
+
+      wmid = '210971342927'
+      p = Passport.new(wmid)
+      p.attestat.should_not be_nil
     end
 
     it "should raise exception on bad WMID" do
@@ -122,6 +127,11 @@ module Webmoney
 
     it "should raise exception on non existent WMID" do
       @wm.stub!(:http_request).and_return("<?xml version='1.0' encoding='windows-1251'?><response retval='0'><fullaccess>0</fullaccess><certinfo wmid='012345678901'/><retdesc>WMID not found</retdesc></response>")
+      lambda {@wm.request(:get_passport, :wmid => '012345678901')}.should raise_error(Webmoney::NonExistentWmidError)
+    end
+
+    it "should raise exception on blank response" do
+      @wm.stub!(:http_request).and_return(nil)
       lambda {@wm.request(:get_passport, :wmid => '012345678901')}.should raise_error(Webmoney::NonExistentWmidError)
     end
 
