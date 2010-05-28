@@ -1,5 +1,10 @@
 ChangeLog
 
+Fri May 28 2010 11:24:40 +0400
+----------------------------
+  V 0.0.6
+  * Fix to compatibility with ruby 1.8.6 (Symbol#to_proc related)
+
 Fri Feb 12 2010 11:22:35 + 0400
 ----------------------------
   V 0.0.5
@@ -13,20 +18,20 @@ Sat Oct 03 2009 16:18:00 + 0400
   V 0.0.4.8
   * Refactor class Passport
 
-Wed Sep 30 2009 16:09:00 + 0400
+Wed Sep 30 2009 16:09:00 +0400
 ----------------------------
   V 0.0.4.7
   * Class Webmoney refactor to module
   * Add find_wm (X8) interface
   * Add logger call when send message via simple queue
 
-Wed Aug 12 2009 20:31:00 + 0400
+Wed Aug 12 2009 20:31:00 +0400
 ----------------------------
   V 0.0.4.6
   * Feature: path to certs directory
   * New CA certificates in bundle
 
-Thu Jun 11 2009 13:05:00 + 0400
+Thu Jun 11 2009 13:05:00 +0400
 ----------------------------
   V 0.0.4.5
   * Fix unexistent WMID passport request error
