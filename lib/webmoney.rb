@@ -236,7 +236,7 @@ module Webmoney
   def check_libxml_version
     libxml = Nokogiri::VERSION_INFO['libxml']
     [libxml['compiled'], libxml['loaded']].each do |ver|
-      major, minor = ver.match(/^(\d+)\.(\d+).*/).to_a[1,2].map(&:to_i)
+      major, minor = ver.match(/^(\d+)\.(\d+).*/).to_a[1,2].map{|i| i.to_i}
       return false if major < 2 or minor < 7
     end
   end
