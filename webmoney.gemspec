@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{webmoney}
-  s.version = "0.0.6"
+  s.version = "0.0.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Oryol"]
-  s.date = %q{2010-05-28}
+  s.date = %q{2010-06-07}
   s.email = %q{eagle.alex@gmail.com}
   s.extensions = ["ext/wmsigner/extconf.rb"]
   s.extra_rdoc_files = [
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
      "ext/wmsigner/stdafx.cpp",
      "ext/wmsigner/stdafx.h",
      "ext/wmsigner/wmsigner.cpp",
-     "lib/certs/02a6c417.0",
+     "lib/certs/0b532bc2.0",
      "lib/certs/3c58f906.0",
      "lib/certs/AddTrust_External_Root.crt",
      "lib/certs/WebMoneyCA.crt",
