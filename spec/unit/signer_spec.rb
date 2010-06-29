@@ -2,8 +2,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Signer, "class" do
 
-  before(:each) do                                                                                                   
-    @s = Signer.new( WmConfig.wmid, WmConfig.password, WmConfig.key)                                                                                             
+  before(:all) do
+    @s = Signer.new( WmConfig.first['wmid'].to_s, WmConfig.first['password'], WmConfig.first['key'])
   end
 
   it "should be Signer class" do

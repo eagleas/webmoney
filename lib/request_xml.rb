@@ -86,6 +86,7 @@ module Webmoney::RequestXML    # :nodoc:all
     req = reqn()
     desc = @ic_out.iconv(opt[:desc])
     address = @ic_out.iconv(opt[:address])[0...255].strip
+    amount = opt[:amount].to_f.to_s.gsub(/\.?0+$/, '')
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
       x.send('w3s.request') {
         x.wmid @wmid
@@ -94,14 +95,15 @@ module Webmoney::RequestXML    # :nodoc:all
           x.orderid opt[:orderid]
           x.customerwmid opt[:customerwmid]
           x.storepurse opt[:storepurse]
-          x.amount opt[:amount].to_f
+          x.amount amount
           x.desc desc
           x.address address
           x.period opt[:period].to_i
           x.expiration opt[:expiration].to_i
         end
         if classic?
-          @plan = opt[:wmid] + req + msgtext + msgsubj
+          @plan = "#{opt[:orderid]}#{opt[:customerwmid]}#{opt[:storepurse]}" + amount
+          @plan+= desc + address + "#{opt[:period].to_i}#{opt[:expiration].to_i}" + req
           x.sign sign(@plan)
         end
       }
@@ -130,23 +132,22 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
-  def xml_operation_history(opt)
+  def xml_outgoing_invoices(opt)
     req = reqn()
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
       x.send('w3s.request') {
         x.wmid @wmid
         x.reqn req
-        x.getoperations do
+        x.getoutinvoices do
           x.purse opt[:purse]
-          x.wmtranid opt[:wmtranid]
-          x.tranid opt[:tranid]
           x.wminvid opt[:wminvid]
           x.orderid opt[:orderid]
           x.datestart opt[:datestart].strftime("%Y%m%d %H:%M:%S")
           x.datefinish opt[:datefinish].strftime("%Y%m%d %H:%M:%S")
         end
         if classic?
-          @plan = opt[:wmid] + req + msgtext + msgsubj
+          # TODO
+          @plan = opt[:purse] + req
           x.sign sign(@plan)
         end
       }

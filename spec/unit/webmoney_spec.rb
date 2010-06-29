@@ -21,7 +21,7 @@ module Webmoney
     end
 
     it "should correct prepare interfaces urls" do
-      wm = TestWM.new :wmid => WmConfig.wmid
+      wm = TestWM.new :wmid => WmConfig.first['wmid']
       wm.should_not be_classic
       wm.interfaces[:balance].class.should == URI::HTTPS
       # converted to light-auth version
@@ -131,31 +131,6 @@ module Webmoney
       ((result[:date] + 60) > Time.now).should be_true
     end
 
-    it "should create invoice" do
-      # TODO
-      #@wm.request(
-      #  :create_invoice,
-      #  :orderid => 3,
-      #  :amount => 10.0,
-      #  :customerwmid => "TEST_WMID",
-      #  :storepurse => "Z161888783954",
-      #  :desc => "Test invoice",
-      #  :address => "Address"
-      #)
-    end
-
-    it "should return operation history" do
-      # TODO
-      #@mywm.request(:operation_history,
-      # :purse => "Z161888783954",
-      # :tranid => 148696631,
-      # :wminvid => 148613215,
-      # :orderid => 1,
-      # :datestart => Date.today() - 1,
-      # :datefinish => Date.today() + 1
-      #)
-    end
-
     it "should create transaction" do
       # TODO @wm.request( :create_transaction, ...)
     end
@@ -164,6 +139,45 @@ module Webmoney
       lambda { @wm.request(:unexistent_interface) }.should raise_error(::NoMethodError)
     end
 
+  end
+
+  describe "invoice" do
+    before(:each) do
+      @wm = webmoney()
+      @ca = contragent()
+      # create invoice
+      @invoice = @ca.request(:create_invoice,
+        :orderid => 1,
+        :amount => 1,
+        :customerwmid => @wm.wmid,
+        :storepurse => WmConfig.second['wmz'],
+        :desc => "Test invoice",
+        :address => "Address"
+      )
+    end
+
+    it "should be created" do
+      @invoice[:retval].should == 0
+      @invoice[:state].should == 0
+      @invoice[:orderid].should == 1
+      @invoice[:ts].should > 0
+      @invoice[:id].should > 0
+    end
+
+    it "should be in state 0 (not paid)" do
+      res = @ca.request(:outgoing_invoices,
+        :purse => WmConfig.second['wmz'],
+        :wminvid => @invoice[:id],
+        :orderid => @invoice[:orderid],
+        :customerwmid => @wm.wmid,
+        :datestart => @invoice[:created_at],
+        :datefinish => @invoice[:created_at]
+      )
+      res[:retval].should == 0
+      res[:invoices].length.should == 1
+      res[:invoices][0][:state].should == 0
+      res[:invoices][0][:amount].should == 1
+    end
   end
 
 end
