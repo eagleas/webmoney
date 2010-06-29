@@ -61,6 +61,12 @@ end
 
 wmid = '111222333444'
 
+= Light
+
+cert = OpenSSL::X509::Certificate.new(File.read("webmoney.cert"))
+key = OpenSSL::PKey::RSA.new(File.read("webmoney.key"), "password")
+mywm = MyWM.new(:wmid => '123456789012', :cert => cert, :key => key)
+
 = Passport (X11)
 
 Get attestat data:
