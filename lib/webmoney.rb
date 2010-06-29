@@ -96,7 +96,7 @@ module Webmoney
       when OpenSSL::PKey::RSA, OpenSSL::PKey::DSA
         @key = opt[:key]
         @cert = opt[:cert]
-        @password = opt[:password]
+        #@password = opt[:password]
     end
 
     # ca_cert or default
@@ -192,6 +192,10 @@ module Webmoney
       http.ca_path = @ca_cert
     else
       raise CaCertificateError, @ca_cert
+    end
+    unless classic?
+      http.cert = @cert
+      http.key = @key
     end
     http.use_ssl = true
     @last_request = xml
