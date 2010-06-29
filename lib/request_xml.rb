@@ -82,7 +82,33 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
-    def xml_create_transaction(opt)
+  def xml_create_invoice(opt)
+    req = reqn()
+    desc = @ic_out.iconv(opt[:desc])
+    address = @ic_out.iconv(opt[:address])[0...255].strip
+    Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
+      x.send('w3s.request') {
+        x.wmid @wmid
+        x.reqn req
+        x.invoice do
+          x.orderid opt[:orderid]
+          x.customerwmid opt[:customerwmid]
+          x.storepurse opt[:storepurse]
+          x.amount opt[:amount].to_f
+          x.desc desc
+          x.address address
+          x.period opt[:period].to_i
+          x.expiration opt[:expiration].to_i
+        end
+        if classic?
+          @plan = opt[:wmid] + req + msgtext + msgsubj
+          x.sign sign(@plan)
+        end
+      }
+    }
+  end
+
+  def xml_create_transaction(opt)
     req = reqn()
     desc = @ic_out.iconv(opt[:desc])                  # description
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
@@ -104,4 +130,26 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
+  def xml_operation_history(opt)
+    req = reqn()
+    Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
+      x.send('w3s.request') {
+        x.wmid @wmid
+        x.reqn req
+        x.getoperations do
+          x.purse opt[:purse]
+          x.wmtranid opt[:wmtranid]
+          x.tranid opt[:tranid]
+          x.wminvid opt[:wminvid]
+          x.orderid opt[:orderid]
+          x.datestart opt[:datestart].strftime("%Y%m%d %H:%M:%S")
+          x.datefinish opt[:datefinish].strftime("%Y%m%d %H:%M:%S")
+        end
+        if classic?
+          @plan = opt[:wmid] + req + msgtext + msgsubj
+          x.sign sign(@plan)
+        end
+      }
+    }
+  end
 end

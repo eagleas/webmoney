@@ -20,4 +20,15 @@ module Webmoney::RequestRetval    # :nodoc:all
     # retval = { 1 - found; 0 - not found }
   end
 
+  def retval_create_invoice(doc)
+    @error = doc.at('//retval').inner_html.to_i
+    @errormsg = doc.at('//retdesc').inner_html
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
+  end
+
+  def retval_operation_history(doc)
+    @error = doc.at('//retval').inner_html.to_i
+    @errormsg = doc.at('//retdesc').inner_html
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
+  end
 end

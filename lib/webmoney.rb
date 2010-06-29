@@ -138,7 +138,7 @@ module Webmoney
   def wmid_exist?(wmid)
     request(:find_wm, :wmid => Wmid.new(wmid))[:retval] == 1
   end
-  
+
   # Generic function for request to WMT-interfaces
 
   def request(iface, opt ={})
