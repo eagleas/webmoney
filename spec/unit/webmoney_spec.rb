@@ -131,6 +131,31 @@ module Webmoney
       ((result[:date] + 60) > Time.now).should be_true
     end
 
+    it "should create invoice" do
+      # TODO
+      #@wm.request(
+      #  :create_invoice,
+      #  :orderid => 3,
+      #  :amount => 10.0,
+      #  :customerwmid => "TEST_WMID",
+      #  :storepurse => "Z161888783954",
+      #  :desc => "Test invoice",
+      #  :address => "Address"
+      #)
+    end
+
+    it "should return operation history" do
+      # TODO
+      #@mywm.request(:operation_history,
+      # :purse => "Z161888783954",
+      # :tranid => 148696631,
+      # :wminvid => 148613215,
+      # :orderid => 1,
+      # :datestart => Date.today() - 1,
+      # :datefinish => Date.today() + 1
+      #)
+    end
+
     it "should create transaction" do
       # TODO @wm.request( :create_transaction, ...)
     end
