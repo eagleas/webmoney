@@ -113,4 +113,38 @@ purse.wmid                                        # => '123456789012'
 purse.belong_to?('123456789012')                  # => true
 
 
+== Example: Create invoice and check it's state
+
+@wm = MyWM.new(:wmid => '123456789012', :password => 'my_pass', :key => 'gQABAIR6...2cC8FZTyKyjBM=')
+
+# Create invoice
+@invoice = @wm.request(:create_invoice,
+  :orderid => 5,
+  :amount => 10,
+  :customerwmid => CUSTOMER_WMID,
+  :storepurse => STORE_PURSE,
+  :desc => "Test invoice",
+  :address => "Delivery Address"
+)
+
+# Check state
+res = @wm.request(:outgoing_invoices,
+  :purse => STORE_PURSE,
+  :wminvid => @invoice[:id],
+  :orderid => @invoice[:orderid],
+  :customerwmid => CUSTOMER_WMID,
+  :datestart => @invoice[:created_at],
+  :datefinish => @invoice[:created_at]
+)
+if res[:retval].should == 0 && !res[:invoices].empty?
+  invoice = res[:invoices].first
+  case invoice[:state]
+    when 0 then # Not Paid
+    when 1 then # Paid with protection
+    when 2 then # Payment complete
+    when 3 then # Rejected
+  end
+end
+
+
 Also, see spec/* for examples.

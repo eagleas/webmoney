@@ -53,21 +53,21 @@ module Webmoney::RequestResult    # :nodoc:all
     end )
   end
 
-  def result_operation_history(doc)
+  def result_outgoing_invoices(doc)
     res = {
       :retval => doc.at('//retval').inner_html.to_i,
       :retdesc   => (doc.at('//testwmpurse/retdesc').inner_html rescue nil),
     }
     if res[:retval] == 0
-      res[:operations] = doc.at('//operations').elements.collect do |operation|
+      res[:invoices] = doc.at('//outinvoices').elements.collect do |invoice|
         r = {
-          :id => operation.attributes['id'].value.to_i,
-          :ts => operation.attributes['ts'].value.to_i,
+          :id => invoice.attributes['id'].value.to_i,
+          :ts => invoice.attributes['ts'].value.to_i,
         }
-        operation.elements.each do |tag|
+        invoice.elements.each do |tag|
           name = tag.name.to_sym
           value = tag.inner_html
-          value = value.to_i if [:opertype, :orderid, :tranid, :period, :wminvid].include?(name)
+          value = value.to_i if [:orderid, :tranid, :period, :expiration, :wmtranid, :state].include?(name)
           value = value.to_f if [:rest, :amount, :comiss].include?(name)
           value = DateTime.strptime(value, "%Y%m%d %H:%M:%S") if [:datecrt, :dateupd].include?(name)
           r[name] = value
@@ -77,5 +77,4 @@ module Webmoney::RequestResult    # :nodoc:all
     end
     res
   end
-
 end

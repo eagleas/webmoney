@@ -27,7 +27,7 @@ module Webmoney::RequestRetval    # :nodoc:all
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
   end
 
-  def retval_operation_history(doc)
+  def retval_outgoing_invoices(doc)
     @error = doc.at('//retval').inner_html.to_i
     @errormsg = doc.at('//retdesc').inner_html
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0

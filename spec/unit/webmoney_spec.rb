@@ -20,7 +20,7 @@ describe Webmoney, "class" do
   end
 
   it "should correct prepare interfaces urls" do
-    wm = TestWM.new :wmid => WmConfig.wmid , :key => nil
+    wm = TestWM.new :wmid => WmConfig.first['wmid']
     wm.should_not be_classic
     wm.interfaces[:balance].class.should == URI::HTTPS
     # converted to light-auth version
@@ -111,6 +111,10 @@ describe Webmoney, "class" do
     lambda {@wm.request(:get_passport, :wmid => '012345678901')}.should raise_error(Webmoney::NonExistentWmidError)
   end
 
+  it "should create transaction" do
+    # TODO @wm.request( :create_transaction, ...)
+  end
+
   it "should return correct BL" do
     wmid = '370860915669'
     @wm.request(:bussines_level, :wmid => wmid).should == 0
@@ -161,6 +165,45 @@ describe Webmoney, "class" do
 
   it "should raise error on undefined xml func" do
     lambda { @wm.request(:unexistent_interface) }.should raise_error(::NoMethodError)
+  end
+
+  describe "invoice" do
+    before(:each) do
+      @wm = webmoney()
+      @ca = contragent()
+      # create invoice
+      @invoice = @ca.request(:create_invoice,
+        :orderid => 1,
+        :amount => 1,
+        :customerwmid => @wm.wmid,
+        :storepurse => WmConfig.second['wmz'],
+        :desc => "Test invoice",
+        :address => "Address"
+      )
+    end
+
+    it "should be created" do
+      @invoice[:retval].should == 0
+      @invoice[:state].should == 0
+      @invoice[:orderid].should == 1
+      @invoice[:ts].should > 0
+      @invoice[:id].should > 0
+    end
+
+    it "should be in state 0 (not paid)" do
+      res = @ca.request(:outgoing_invoices,
+        :purse => WmConfig.second['wmz'],
+        :wminvid => @invoice[:id],
+        :orderid => @invoice[:orderid],
+        :customerwmid => @wm.wmid,
+        :datestart => @invoice[:created_at],
+        :datefinish => @invoice[:created_at]
+      )
+      res[:retval].should == 0
+      res[:invoices].length.should == 1
+      res[:invoices][0][:state].should == 0
+      res[:invoices][0][:amount].should == 1
+    end
   end
 
 end
