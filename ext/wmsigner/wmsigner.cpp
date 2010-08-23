@@ -48,22 +48,22 @@ extern "C" VALUE signer_new(VALUE self, VALUE szWMID, VALUE szPwd, VALUE szKeyDa
     if(NIL_P(szWMID))	rb_raise(rb_eArgError, "nil wmid");    
 
     // check WMID
-    if (! IsWmid(RSTRING(szWMID)->ptr)) rb_raise(rb_eArgError, "Incorrect WMID");
+    if (! IsWmid(RSTRING_PTR(szWMID))) rb_raise(rb_eArgError, "Incorrect WMID");
 
     if(NIL_P(szPwd)) rb_raise(rb_eArgError, "nil password");
 
     if(NIL_P(szKeyData64)) rb_raise(rb_eArgError, "nil key");
 
     // check base64 data
-    if ( RSTRING(szKeyData64)->len != 220 ) rb_raise(rb_eArgError, "Illegal size for base64 keydata");
+    if ( RSTRING_LEN(szKeyData64) != 220 ) rb_raise(rb_eArgError, "Illegal size for base64 keydata");
     
     char KeyBuffer[ASCII_SIZE];
-    int bytes = code64( ENCODE, KeyBuffer, ASCII_SIZE, RSTRING(szKeyData64)->ptr, BUF_64_SIZE );
+    int bytes = code64( ENCODE, KeyBuffer, ASCII_SIZE, RSTRING_PTR(szKeyData64), BUF_64_SIZE );
 
     // check encoded key
     if ( bytes != 164) rb_raise(rb_eArgError, "Illegal size for keydata");
 
-    pSign = new Signer(RSTRING(szWMID)->ptr, RSTRING(szPwd)->ptr, "");
+    pSign = new Signer(RSTRING_PTR(szWMID), RSTRING_PTR(szPwd), "");
     VALUE tdata = Data_Wrap_Struct(self, 0, signer_free, pSign);
 
     pSign->isIgnoreKeyFile = TRUE;
@@ -93,7 +93,7 @@ extern "C" VALUE signer_sign(VALUE self, VALUE szIn)
     if (pSign)
     {   
       szptr szSign;
-			if (pSign->Sign(RSTRING(szIn)->ptr, szSign))
+			if (pSign->Sign(RSTRING_PTR(szIn), szSign))
 			{
 		 	    ret = rb_str_new2((char *)(const char *)szSign);
 			}
