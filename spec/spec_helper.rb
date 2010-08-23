@@ -17,11 +17,14 @@ end
 
 class TestWM
   include Webmoney
-end
 
-def webmoney
-  TestWM.new :wmid => WmConfig.wmid,
-    :password => WmConfig.password,
-    :key => WmConfig.key,
-    :ca_cert => WmConfig.ca_cert
+  def initialize(opt = {})
+    defaults = {:wmid => WmConfig.wmid,
+                :password => WmConfig.password,
+                :key => WmConfig.key,
+                :ca_cert => WmConfig.ca_cert}
+    defaults.merge!(opt)
+    super(defaults)
+  end
+
 end
