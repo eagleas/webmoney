@@ -1,3 +1,4 @@
+#encoding: utf-8
 # Class for store attestat information
 module Webmoney
 

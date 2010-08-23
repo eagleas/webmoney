@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Webmoney::RequestXML    # :nodoc:all
 
   def xml_get_passport(opt)

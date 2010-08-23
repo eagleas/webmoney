@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Webmoney::RequestRetval    # :nodoc:all
 
   def retval_common(doc)
