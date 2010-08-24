@@ -1,5 +1,6 @@
 #encoding: utf-8
 require 'spec_helper'
+require 'date'
 
 describe Webmoney::Passport, "class" do
 
@@ -13,26 +14,14 @@ describe Webmoney::Passport, "class" do
 
   it "request result get_passport should be hash with data" do
     wmid = '000000000007'
-    created_at = Time.at(1077735241.37)
     res = @wm.request(:get_passport, :wmid => wmid, :dict => 1)
     res[:full_access].should be_false
-    res[:wmids].should eql({
-      wmid => { :created_at => created_at }
-    })
-    res[:attestat].should == {
-      :regcid=>"10",
-      :locked=>"1",
-      :recalled=>"0",
-      :cid=>"103453",
-      :admlocked=>"0",
-      :created_at=>created_at,
-      :datecrt=>"2004-02-25T21:54:01.370",
-      :regnickname=>"WM Passport Service /Центр аттестации/",
-      :regwmid=>"464889785562",
-      :attestat=>150,
-      :tid=>"150",
-      :datediff=>(Date.today - created_at.send(:to_date)).to_s
-    }
+    res[:wmids][wmid][:created_at].should be_a(Time)
+    res[:attestat][:created_at].should be_a(Time)
+    [:regcid, :locked, :recalled, :cid, :admlocked, :created_at, :datecrt, :regnickname,
+      :regwmid, :attestat, :tid, :datediff].each do |key|
+      res[:attestat].should have_key(key)
+    end
 
     u_info = {
       :locked=>"0",
