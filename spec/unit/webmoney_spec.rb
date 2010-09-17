@@ -20,7 +20,7 @@ describe Webmoney, "class" do
   end
 
   it "should correct prepare interfaces urls" do
-    wm = TestWM.new :wmid => WmConfig.first['wmid']
+    wm = TestWM.new :wmid => WmConfig.first['wmid'], :key => nil
     wm.should_not be_classic
     wm.interfaces[:balance].class.should == URI::HTTPS
     # converted to light-auth version

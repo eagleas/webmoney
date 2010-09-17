@@ -26,7 +26,7 @@ module Webmoney
       # memoize
       @wmid ||=
         begin
-          res = @@worker.request(:find_wm, :purse => self)
+          res = @@worker.request(:find_wm, :purse => self, :wmid => "")
           res[:retval] == 1 ? Wmid.new(res[:wmid]) : nil
         end
     end
