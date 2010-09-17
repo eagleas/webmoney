@@ -12,6 +12,11 @@ describe Webmoney::Purse, "class" do
     @t = Webmoney::Purse.new('Z136894439563')
   end
 
+  it "should return 111111111111 wmid for Z111111111111 purse" do
+    t = Webmoney::Purse.new("Z111111111111")
+    t.wmid.should == '111111111111'
+  end
+
   it "should be kind of Wmid" do
     @t.should be_kind_of(Webmoney::Purse)
   end
@@ -26,16 +31,16 @@ describe Webmoney::Purse, "class" do
   end
 
   it "should return wmid" do
-    @t.wmid.should == '405424574082'
+    @t.wmid.should == '128984249415'
   end
 
   it "should return true" do
-    @wm.should_receive(:request).with(:find_wm, :purse => @t).and_return(:retval=>1, :wmid => '405424574082')
-    @t.belong_to?('405424574082').should be_true
+    @wm.should_receive(:request).with(:find_wm, :purse => @t, :wmid => '').and_return(:retval=>1, :wmid => '128984249415')
+    @t.belong_to?('128984249415').should be_true
   end
 
   it "should return false" do
-    @wm.should_receive(:request).with(:find_wm, :purse => @t).and_return(:retval=>0)
+    @wm.should_receive(:request).with(:find_wm, :purse => @t, :wmid => '').and_return(:retval=>0, :wmid => '128984249415')
     @t.belong_to?('123456789012').should be_false
   end
 
@@ -45,7 +50,7 @@ describe Webmoney::Purse, "class" do
 
     it "it" do
       @wm.should_not_receive(:request).with(:find_wm, :purse => @t)
-      @t.belong_to?('405424574082').should be_true
+      @t.belong_to?('128984249415').should be_true
     end
 
   end

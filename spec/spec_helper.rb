@@ -39,6 +39,16 @@ raise "First user wmtype must be classic!" if WmConfig.first['wmtype'] != 'class
 class TestWM
   include Webmoney
 
+  def initialize(opt = {})
+    defaults = {:wmid => WmConfig.first['wmid'],
+                :password => WmConfig.first['password'],
+                :key => WmConfig.first['key'],
+                :ca_cert => WmConfig.ca_cert}
+    defaults.merge!(opt)
+    super(defaults)
+  end
+end
+
 def getwm(config)
   if config.wmtype == "light"
     # light
