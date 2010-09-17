@@ -19,15 +19,15 @@ describe Webmoney, "class" do
     (t2 > t1).should be_true
   end
 
-    it "should correct prepare interfaces urls" do
-      wm = TestWM.new :wmid => WmConfig.first['wmid'], :key => nil
-      wm.should_not be_classic
-      wm.interfaces[:balance].class.should == URI::HTTPS
-      # converted to light-auth version
-      wm.interfaces[:balance].to_s.should == 'https://w3s.wmtransfer.com/asp/XMLPursesCert.asp'
-      # non-converted to light-auth version
-      wm.interfaces[:get_passport].to_s.should == 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp'
-    end
+  it "should correct prepare interfaces urls" do
+    wm = TestWM.new :wmid => WmConfig.first['wmid'], :key => nil
+    wm.should_not be_classic
+    wm.interfaces[:balance].class.should == URI::HTTPS
+    # converted to light-auth version
+    wm.interfaces[:balance].to_s.should == 'https://w3s.wmtransfer.com/asp/XMLPursesCert.asp'
+    # non-converted to light-auth version
+    wm.interfaces[:get_passport].to_s.should == 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp'
+  end
 
   it "should correct reqn" do
     Time.stub!(:now).and_return(Time.at(1244704683.69677))
@@ -109,6 +109,10 @@ describe Webmoney, "class" do
 
   it "should raise exception on non existent WMID" do
     lambda {@wm.request(:get_passport, :wmid => '012345678901')}.should raise_error(Webmoney::NonExistentWmidError)
+  end
+
+  it "should create transaction" do
+    # TODO @wm.request( :create_transaction, ...)
   end
 
   it "should return correct BL" do
