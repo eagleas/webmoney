@@ -1,3 +1,4 @@
+#encoding: utf-8
 # :title:Webmoney library Documentation
 # :main:lib/webmoney.rb
 # :include:README

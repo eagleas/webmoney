@@ -1,3 +1,4 @@
+#encoding: utf-8
 # Support class
 module Webmoney
   class Wmid < String

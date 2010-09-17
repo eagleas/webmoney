@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Webmoney::RequestResult    # :nodoc:all
 
   def result_check_sign(doc)

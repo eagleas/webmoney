@@ -1,3 +1,4 @@
+#encoding: utf-8
 # Loads mkmf which is used to make makefiles for Ruby extensions
 require 'mkmf'
 

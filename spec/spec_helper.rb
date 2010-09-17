@@ -38,7 +38,6 @@ raise "First user wmtype must be classic!" if WmConfig.first['wmtype'] != 'class
 
 class TestWM
   include Webmoney
-end
 
 def getwm(config)
   if config.wmtype == "light"
