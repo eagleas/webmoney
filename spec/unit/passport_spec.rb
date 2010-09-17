@@ -123,4 +123,10 @@ describe Webmoney::Passport, "class" do
     lambda {@wm.request(:get_passport, :wmid => '012345678901')}.should raise_error(Webmoney::NonExistentWmidError)
   end
 
+  it "should have wmids" do
+    passport = Webmoney::Passport.new(@wm.wmid)
+    passport.wmids.should be_instance_of(Hash)
+    passport.wmids.has_key?(@wm.wmid).should be_true
+    passport.wmids[@wm.wmid].should be_instance_of(Hash)
+  end
 end

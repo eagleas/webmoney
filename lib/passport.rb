@@ -35,6 +35,7 @@ module Webmoney
     def directory; @directory ||= getinfo[:directory] end
     def full_access; @full_access = getinfo[:full_access] end
     def userinfo; @userinfo ||= getinfo[:userinfo] end
+    def wmids; @userinfo ||= getinfo[:wmids] end
 
     protected
 
