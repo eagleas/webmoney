@@ -1,11 +1,17 @@
 ChangeLog
 
+Mon Sep 20 2010 14:31:00 +0300
+----------------------------
+  V 0.0.9
+  * Add light-keys support
+  * Fix Purse bug
+  * Add Passport#wmids method
+
 Mon Aug 24 2010 12:00:00 +0300
 ----------------------------
   V 0.0.8
   * Compatible with ruby 1.9.2
   * Added Gemfile
-
 
 Mon Jun 07 2010 19:01:30 +0400
 ----------------------------

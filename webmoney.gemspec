@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{webmoney}
-  s.version = "0.0.8"
+  s.version = "0.0.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Oryol"]
-  s.date = %q{2010-08-24}
+  s.date = %q{2010-09-20}
   s.email = %q{eagle.alex@gmail.com}
   s.extensions = ["ext/wmsigner/extconf.rb"]
   s.extra_rdoc_files = [
