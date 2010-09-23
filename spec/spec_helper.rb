@@ -1,24 +1,6 @@
 #encoding: utf-8
 #
-# ~/.wm/config.yml example:
-#
-# ca_cert:
-#
-# first:
-#   wmtype: classic
-#   wmid: 
-#   password: 
-#   key: 
-#   wmz:
-#
-# second:
-#   wmtype: light
-#   wmid: 
-#   password: 
-#   cert: webmoney.cert
-#   key: webmoney.key
-#   wmz:
-#
+# Please, see RUNNING_TESTS
 
 require 'rubygems'
 require 'test/unit'
@@ -53,8 +35,18 @@ end
 def getwm(config)
   if config.wmtype == "light"
     # light
-    cert = OpenSSL::X509::Certificate.new(File.read(config.cert))
-    key = OpenSSL::PKey::RSA.new(File.read(config.key), config.password)
+    cert = OpenSSL::X509::Certificate.new(
+      begin
+        File.read(config.cert)
+      rescue
+        File.read("#{ENV['HOME']}/.wm/#{config.cert}")
+      end)
+    key = OpenSSL::PKey::RSA.new(
+      begin
+        File.read(config.key)
+      rescue
+        File.read("#{ENV['HOME']}/.wm/#{config.key}")
+      end, config.password)
     TestWM.new :wmid => config.wmid,
       :key => key,
       :cert => cert,
