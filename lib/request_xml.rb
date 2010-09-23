@@ -158,12 +158,12 @@ module Webmoney::RequestXML    # :nodoc:all
   def xml_login(opt)
     Nokogiri::XML::Builder.new { |x|
       x.send('request') {
-        x.siteHolder opt[:siteHolder]
+        x.siteHolder opt[:siteHolder] || @wmid
         x.user opt[:WmLogin_WMID]
         x.ticket opt[:WmLogin_Ticket]
         x.urlId  opt[:WmLogin_UrlID]
         x.authType opt[:WmLogin_AuthType]
-        x.userAddress opt[:ip]
+        x.userAddress opt[:remote_ip]
       }
     }
   end

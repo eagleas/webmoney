@@ -16,7 +16,7 @@ module Webmoney::RequestResult    # :nodoc:all
   def result_send_message(doc)
     {
       :id => doc.at('//message')['id'],
-      :date => DateTime.strptime(doc.at('//message/datecrt').inner_html, "%Y%m%d %H:%M:%S")
+      :date => Time.parse(doc.at('//message/datecrt').inner_html)
     }
   end
 
@@ -38,7 +38,7 @@ module Webmoney::RequestResult    # :nodoc:all
       res[:id]  = (doc.at('//invoice').attributes['id'].value.to_i)
       res[:ts]  = (doc.at('//invoice').attributes['ts'].value.to_i)
       res[:state] = (doc.at('//invoice/state').inner_html.to_i)
-      res[:created_at] = DateTime.strptime(doc.at('//invoice/datecrt').inner_html, "%Y%m%d %H:%M:%S")
+      res[:created_at] = Time.parse(doc.at('//invoice/datecrt').inner_html)
     end
     res
   end
@@ -69,7 +69,7 @@ module Webmoney::RequestResult    # :nodoc:all
           value = tag.inner_html
           value = value.to_i if [:orderid, :tranid, :period, :expiration, :wmtranid, :state].include?(name)
           value = value.to_f if [:rest, :amount, :comiss].include?(name)
-          value = DateTime.strptime(value, "%Y%m%d %H:%M:%S") if [:datecrt, :dateupd].include?(name)
+          value = Time.parse(value) if [:datecrt, :dateupd].include?(name)
           r[name] = value
         end
         r
@@ -83,7 +83,7 @@ module Webmoney::RequestResult    # :nodoc:all
       :retval => doc.at('/response')['retval'].to_i,
       :retdesc   => doc.at('/response')['sval'],
       :lastAccess => doc.at('/response')['lastAccess'],
-      :expires => DateTime.strptime(doc.at('/response')['expires'], "%Y%m%d %H:%M:%S")
+      :expires => Time.utc.parse(doc.at('/response')['expires'])
     }
   end
 
