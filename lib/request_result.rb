@@ -14,10 +14,10 @@ module Webmoney::RequestResult    # :nodoc:all
   end
 
   def result_send_message(doc)
-    time = doc.at('//message/datecrt').inner_html
-    m = time.match(/(\d{4})(\d{2})(\d{2}) (\d{2}):(\d{2}):(\d{2})/)
-    time = Time.mktime(*m[1..6])
-    { :id => doc.at('//message')['id'], :date => time }
+    {
+      :id => doc.at('//message')['id'],
+      :date => DateTime.strptime(doc.at('//message/datecrt').inner_html, "%Y%m%d %H:%M:%S")
+    }
   end
 
   def result_find_wm(doc)
@@ -38,7 +38,7 @@ module Webmoney::RequestResult    # :nodoc:all
       res[:id]  = (doc.at('//invoice').attributes['id'].value.to_i)
       res[:ts]  = (doc.at('//invoice').attributes['ts'].value.to_i)
       res[:state] = (doc.at('//invoice/state').inner_html.to_i)
-      res[:created_at] = (DateTime.strptime(doc.at('//invoice/datecrt').inner_html, "%Y%m%d %H:%M:%S"))
+      res[:created_at] = DateTime.strptime(doc.at('//invoice/datecrt').inner_html, "%Y%m%d %H:%M:%S")
     end
     res
   end
@@ -77,4 +77,14 @@ module Webmoney::RequestResult    # :nodoc:all
     end
     res
   end
+
+  def result_login(doc)
+    {
+      :retval => doc.at('/response')['retval'].to_i,
+      :retdesc   => doc.at('/response')['sval'],
+      :lastAccess => doc.at('/response')['lastAccess'],
+      :expires => DateTime.strptime(doc.at('/response')['expires'], "%Y%m%d %H:%M:%S")
+    }
+  end
+
 end

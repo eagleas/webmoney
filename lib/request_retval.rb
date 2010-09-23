@@ -32,4 +32,12 @@ module Webmoney::RequestRetval    # :nodoc:all
     @errormsg = doc.at('//retdesc').inner_html
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
   end
+
+  def retval_login(doc)
+    @error = doc.at('/response')['retval'].to_i
+    @errormsg = doc.at('/response')['sval']
+    raise Webmoney::RequestError, [@error, @errormsg].join(' ') if @error == -1 || @error == 1
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
+  end
+
 end
