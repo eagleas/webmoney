@@ -83,7 +83,7 @@ module Webmoney::RequestResult    # :nodoc:all
       :retval => doc.at('/response')['retval'].to_i,
       :retdesc   => doc.at('/response')['sval'],
       :lastAccess => doc.at('/response')['lastAccess'],
-      :expires => Time.utc.parse(doc.at('/response')['expires'])
+      :expires => doc.at('/response')['expires']
     }
   end
 
