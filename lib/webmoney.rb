@@ -31,7 +31,7 @@ module Webmoney
   class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
   
-  attr_reader :wmid, :error, :errormsg, :last_request, :last_response, :interfaces
+  attr_reader :wmid, :error, :errormsg, :last_request, :last_response, :interfaces, :rid
   attr_accessor :messenger
 
 
@@ -43,15 +43,14 @@ module Webmoney
   # Required options:
   #
   # - :wmid - WMID
-  # - :password - on Classic key or Light X509 certificate & key
-  # - :key - Base64 string for Classic key
-  #
-  # OR
-  # #TODO
-  # - :key - OpenSSL::PKey::RSA or OpenSSL::PKey::DSA object
-  # - :cert - OpenSSL::X509::Certificate object
   #
   # Optional:
+  #
+  # - :password - on Classic key or Light X509 certificate & key
+  # - :key - Base64 string for Classic key
+  # OR
+  # - :key - OpenSSL::PKey::RSA or OpenSSL::PKey::DSA object
+  # - :cert - OpenSSL::X509::Certificate object
   #
   # - :ca_cert - file CA certificate or path to directory with certs (in PEM format)
 
@@ -80,6 +79,8 @@ module Webmoney
       else
         opt[:ca_cert]
       end
+
+    @rid = opt[:rid]
 
     # Iconv.new(to, from)
     @ic_in = Iconv.new('UTF-8', 'CP1251')

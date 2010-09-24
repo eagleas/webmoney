@@ -134,19 +134,6 @@ describe Webmoney, "class" do
     ((result[:date] + 60) > Time.now).should be_true
   end
 
-  it "should create invoice" do
-    # TODO
-    #@wm.request(
-    #  :create_invoice,
-    #  :orderid => 3,
-    #  :amount => 10.0,
-    #  :customerwmid => "TEST_WMID",
-    #  :storepurse => "Z161888783954",
-    #  :desc => "Test invoice",
-    #  :address => "Address"
-    #)
-  end
-
   it "should return operation history" do
     # TODO
     #@mywm.request(:operation_history,
@@ -203,6 +190,35 @@ describe Webmoney, "class" do
       res[:invoices].length.should == 1
       res[:invoices][0][:state].should == 0
       res[:invoices][0][:amount].should == 1
+    end
+  end
+
+  describe "login interface" do
+
+    before(:each) do
+      @ca = contragent()
+    end
+
+    it "return InvalidArgument" do
+      lambda { @ca.request(:login,
+        :WmLogin_WMID => @ca.wmid,
+        :WmLogin_UrlID => 'invalid_rid')
+      }.should raise_error(Webmoney::RequestError, "1 InvalidArgument")
+      @ca.error.should == 1
+      @ca.errormsg.should == 'InvalidArgument'
+    end
+
+    it "return InvalidTicket" do
+      lambda { @ca.request(:login,
+        :WmLogin_WMID => @ca.wmid,
+        :WmLogin_UrlID => @ca.rid,
+        :WmLogin_Ticket => 'XVWuooAEOJ0gG5NyDXJ0Zu0GffroqkG7APNKFmCAzA7XNVSx',
+        :WmLogin_AuthType => 'KeeperLight',
+        :remote_ip => '127.0.0.1'
+        )
+      }.should raise_error(Webmoney::ResultError)
+      @ca.error.should == 2
+      @ca.errormsg.should == 'FalseTicket'
     end
   end
 

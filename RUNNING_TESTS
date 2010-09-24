@@ -17,6 +17,7 @@ second:
   cert: webmoney.pem
   key: webmoney.key
   wmz: Z012345678901
+  rid: 57f9ff86-1afb-431f-aff4-9dfb00b70773     # site RID from login.wmtransfer.com
 
 
 

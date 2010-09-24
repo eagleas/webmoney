@@ -50,13 +50,15 @@ def getwm(config)
     TestWM.new :wmid => config.wmid,
       :key => key,
       :cert => cert,
-      :ca_cert => WmConfig.ca_cert
+      :ca_cert => WmConfig.ca_cert,
+      :rid => config.rid
   else
     # classic
     TestWM.new :wmid => config.wmid,
       :password => config.password,
       :key => config.key,
-      :ca_cert => config.ca_cert
+      :ca_cert => config.ca_cert,
+      :rid => config.rid
   end
 end
 
