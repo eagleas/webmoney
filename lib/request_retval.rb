@@ -34,9 +34,13 @@ module Webmoney::RequestRetval    # :nodoc:all
   end
 
   def retval_login(doc)
-    @error = doc.at('/response')['retval'].to_i
-    @errormsg = doc.at('/response')['sval']
-    raise Webmoney::RequestError, [@error, @errormsg].join(' ') if @error == -1 || @error == 1
+    if retval = doc.at('/response')['retval']
+      @error = retval.to_i
+      @errormsg = doc.at('/response')['sval']
+    else
+      @error = -3
+      @errormsg = 'Unknown response'
+    end
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
   end
 

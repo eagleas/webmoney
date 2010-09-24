@@ -203,7 +203,7 @@ describe Webmoney, "class" do
       lambda { @ca.request(:login,
         :WmLogin_WMID => @ca.wmid,
         :WmLogin_UrlID => 'invalid_rid')
-      }.should raise_error(Webmoney::RequestError, "1 InvalidArgument")
+      }.should raise_error(Webmoney::ResultError, "1 InvalidArgument")
       @ca.error.should == 1
       @ca.errormsg.should == 'InvalidArgument'
     end
