@@ -76,7 +76,7 @@ module Webmoney
       end
 
       wmids = root.xpath('certinfo/wmids/row').inject({}) do |memo, elm|
-        attrs = {:created_at => Time.xmlschema(elm['datereg'])}
+        attrs = {:created_at => (Time.xmlschema(elm['datereg']) rescue nil)}
         attrs.merge!(:nickname => elm['nickname']) unless elm['nickname'].empty?
         attrs.merge!(:info => elm['info']) unless elm['info'].empty?
         memo.merge!(elm['wmid'] => attrs)
