@@ -14,16 +14,17 @@ License::   MIT License
 == Request types
 
 Completed:
+- create_invoice     - x1
+- create_transaction - x2
+- outgoing_invoices  - x4
 - send_message       - x6
 - get_passport       - x11
 - find_wm            - x8
 - bussines_level
+- login
 
 Incompleted (help need!):
-- create_invoice     - x1
-- create_transaction - x2
 - operation_history  - x3
-- outgoing_invoices  - x4
 - finish_protect     - x5
 - check_sign         - x7
 - balance            - x9
