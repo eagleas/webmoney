@@ -3,8 +3,7 @@
 # Please, see RUNNING_TESTS
 
 require 'rubygems'
-require 'test/unit'
-require 'spec'
+require 'rspec'
 require 'ostruct'
 require 'yaml'
 require 'time'

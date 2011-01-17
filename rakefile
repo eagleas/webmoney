@@ -1,23 +1,24 @@
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
-begin
-  require 'rake/extensiontask'
-rescue LoadError
-  puts "Rake-compiler not available. Install it with: sudo gem install rake-compiler"
-  exit 1
-end
-require 'spec/rake/spectask'
+require 'rake/extensiontask'
 
 CLEAN.include ["ext/wmsigner/*.{so,o}", "ext/wmsigner/Makefile", "lib/wmsigner.so", "pkg", "tmp"]
 
 Rake::ExtensionTask.new('wmsigner')
 
-Spec::Rake::SpecTask.new do |task|
-  task.libs << 'spec'
-  task.spec_files = Dir.glob( 'spec/**/*_spec.rb' )
-  task.verbose = true
+require 'rspec/core'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = FileList['spec/**/*_spec.rb']
 end
+
+RSpec::Core::RakeTask.new(:rcov) do |spec|
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+end
+
+task :default => :spec
 
 spec = begin
   require 'jeweler'
@@ -27,7 +28,6 @@ spec = begin
     gemspec.authors = ["Alexander Oryol"]
     gemspec.email =  "eagle.alex@gmail.com"
     gemspec.summary = "Webmoney interfaces and native wmsigner"
-    gemspec.add_dependency('nokogiri')
     gemspec.files << %w( rakefile ChangeLog lib/WebMoneyCA.crt ) +
                       Dir.glob( 'ext/**/*.{h,cpp,rb}' ) +
                       Dir.glob( 'tools/*.rb' )
@@ -40,7 +40,4 @@ spec = begin
       gemspec.extensions = Dir.glob( 'ext/**/extconf.rb' )
     end
   end
-
-rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
 end
