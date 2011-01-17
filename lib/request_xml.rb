@@ -27,13 +27,13 @@ module Webmoney::RequestXML    # :nodoc:all
   end
 
   def xml_check_sign(opt)
-    plan_out = @ic_out.iconv(opt[:plan])
+    plan_in, plan_out = filter_str(opt[:plan])
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
       x.send('w3s.request') {
         x.wmid @wmid
         x.testsign {
           x.wmid opt[:wmid]
-          x.plan { x.cdata opt[:plan] }
+          x.plan { x.cdata plan_in }
           x.sign opt[:sign]
         }
         if classic?
@@ -46,19 +46,19 @@ module Webmoney::RequestXML    # :nodoc:all
 
   def xml_send_message(opt)
     req = reqn()
-    msgsubj = @ic_out.iconv(opt[:subj])
-    msgtext = @ic_out.iconv(opt[:text])
+    subj_in, subj_out = filter_str(opt[:subj])
+    text_in, text_out = filter_str(opt[:text])
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
       x.send('w3s.request') {
         x.wmid @wmid
         x.reqn req
         x.message do
           x.receiverwmid opt[:wmid]
-          x.msgsubj { x.cdata opt[:subj] }
-          x.msgtext { x.cdata opt[:text] }
+          x.msgsubj { x.cdata subj_in }
+          x.msgtext { x.cdata text_in }
         end
         if classic?
-          @plan = opt[:wmid] + req + msgtext + msgsubj
+          @plan = opt[:wmid] + req + text_out + subj_out
           x.sign sign(@plan)
         end
       }
@@ -85,27 +85,23 @@ module Webmoney::RequestXML    # :nodoc:all
 
   def xml_create_invoice(opt)
     req = reqn()
-    desc = @ic_out.iconv(opt[:desc])
-    address = @ic_out.iconv(opt[:address])[0...255].strip
+    desc_in, desc_out = filter_str(opt[:desc])
+    address_in, address_out = filter_str(opt[:address])
     amount = opt[:amount].to_f.to_s.gsub(/\.?0+$/, '')
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
       x.send('w3s.request') {
-        x.wmid @wmid
         x.reqn req
+        x.wmid @wmid
+        x.sign sign("#{opt[:orderid]}#{opt[:customerwmid]}#{opt[:storepurse]}#{amount}#{desc_out}#{address_out}#{opt[:period]}#{opt[:expiration]}#{req}") if classic?
         x.invoice do
           x.orderid opt[:orderid]
           x.customerwmid opt[:customerwmid]
           x.storepurse opt[:storepurse]
           x.amount amount
-          x.desc desc
-          x.address address
+          x.desc desc_in
+          x.address address_in
           x.period opt[:period].to_i
           x.expiration opt[:expiration].to_i
-        end
-        if classic?
-          @plan = "#{opt[:orderid]}#{opt[:customerwmid]}#{opt[:storepurse]}" + amount
-          @plan+= desc + address + "#{opt[:period].to_i}#{opt[:expiration].to_i}" + req
-          x.sign sign(@plan)
         end
       }
     }
@@ -113,21 +109,23 @@ module Webmoney::RequestXML    # :nodoc:all
 
   def xml_create_transaction(opt)
     req = reqn()
-    desc = @ic_out.iconv(opt[:desc])                  # description
+    desc_in, desc_out = filter_str(opt[:desc])                  # description
+    pcode = opt[:pcode].strip if opt[:period] > 0 && opt[:pcode]
+    wminvid = opt[:wminvid] || 0
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
       x.send('w3s.request') {
         x.reqn req
-        x.wmid(@wmid) if classic?
-          x.sign sign(@plan) if classic?
+        x.wmid(@wmid)
+        x.sign sign("#{req}#{opt[:transid]}#{opt[:pursesrc]}#{opt[:pursedest]}#{opt[:amount]}#{opt[:period]}#{pcode}#{desc_out}#{wminvid}") if classic?
         x.trans {
           x.tranid opt[:transid]                      # transaction id - unique
           x.pursesrc opt[:pursesrc]                   # sender purse
           x.pursedest opt[:pursedest]                 # recipient purse
           x.amount opt[:amount]
           x.period( opt[:period] || 0 )                # protection period (0 - no protection)
-          x.pcode( opt[:pcode].strip ) if opt[:period] > 0 && opt[:pcode]  # protection code
-          x.desc desc
-          x.wminvid( opt[:wminvid] || 0 )             # invoice number (0 - without invoice)
+          x.pcode( pcode ) if pcode  # protection code
+          x.desc desc_in
+          x.wminvid( wminvid )             # invoice number (0 - without invoice)
         }
       }
     }
@@ -137,19 +135,15 @@ module Webmoney::RequestXML    # :nodoc:all
     req = reqn()
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
       x.send('w3s.request') {
-        x.wmid @wmid
         x.reqn req
+        x.wmid @wmid
+        x.sign sign("#{opt[:purse]}#{req}") if classic?
         x.getoutinvoices do
           x.purse opt[:purse]
           x.wminvid opt[:wminvid]
           x.orderid opt[:orderid]
           x.datestart opt[:datestart].strftime("%Y%m%d %H:%M:%S")
           x.datefinish opt[:datefinish].strftime("%Y%m%d %H:%M:%S")
-        end
-        if classic?
-          # TODO
-          @plan = opt[:purse] + req
-          x.sign sign(@plan)
         end
       }
     }

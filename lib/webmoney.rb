@@ -82,9 +82,28 @@ module Webmoney
 
     @rid = opt[:rid]
 
-    # Iconv.new(to, from)
-    @ic_in = Iconv.new('UTF-8', 'CP1251')
-    @ic_out = Iconv.new('CP1251', 'UTF-8')
+    # Iconv will raise exception Iconv::IllegalSequence,
+    # when uncovertable character in input sequence. It is default behavior.
+    # With option :force_encoding Iconv initialized with //IGNORE option, and
+    # uncovertable characters will be cutted.
+    if opt[:force_encoding]
+      #Iconv.new(to, from)
+      @ic_out = Iconv.new('CP1251//IGNORE', 'UTF-8')
+      @ic_in  = Iconv.new('UTF-8', 'CP1251')
+      instance_eval do
+        def filter_str(str)
+          str_out = @ic_out.iconv(str)
+          return @ic_in.iconv(str_out), str_out
+        end
+      end
+    else
+      @ic_out = Iconv.new('CP1251', 'UTF-8')
+      instance_eval do
+        def filter_str(str)
+          return str, @ic_out.iconv(str)
+        end
+      end
+    end
 
     prepare_interface_urls
 
@@ -97,7 +116,7 @@ module Webmoney
   def classic?
     !! @signer
   end
-  
+
   # Send message through Queue and Thread
   #
   # Params: { :wmid, :subj, :text }
