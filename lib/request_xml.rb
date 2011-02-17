@@ -162,4 +162,23 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
+  def xml_i_trust(opt)
+    opt[:wmid] = @wmid
+    xml_trust_me(opt)
+  end
+
+  def xml_trust_me(opt)
+    req = reqn()[0..14]
+    Nokogiri::XML::Builder.new { |x|
+      x.send('w3s.request') {
+        x.reqn req
+        x.wmid @wmid
+        x.sign sign("#{opt[:wmid]}#{req}")
+        x.gettrustlist do
+          x.wmid opt[:wmid]
+        end
+      }
+    }
+  end
+
 end

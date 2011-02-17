@@ -18,8 +18,10 @@ Completed:
 - create_transaction - x2
 - outgoing_invoices  - x4
 - send_message       - x6
-- get_passport       - x11
 - find_wm            - x8
+- get_passport       - x11
+- i_trust            - x15
+- trust_me           - x15
 - bussines_level
 - login
 
@@ -31,8 +33,6 @@ Incompleted (help need!):
 - incoming_invoices  - x10
 - reject_protection  - x13
 - transaction_moneyback - x14
-- i_trust               - x15
-- trust_me              - x15
 - trust_save            - x15
 - create_purse          - x16
 - create_contract       - x17

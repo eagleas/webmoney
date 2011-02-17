@@ -87,4 +87,16 @@ module Webmoney::RequestResult    # :nodoc:all
     }
   end
 
+  def result_trust_me(doc)
+    {
+      :count        => doc.at('//trustlist')['cnt'].to_i,
+      :invoices     => doc.xpath('//trust[@inv="1"]/purse').map(&:inner_text),
+      :transactions => doc.xpath('//trust[@trans="1"]/purse').map(&:inner_text),
+      :balance      => doc.xpath('//trust[@purse="1"]/purse').map(&:inner_text),
+      :history      => doc.xpath('//trust[@transhist="1"]/purse').map(&:inner_text)
+    }
+  end
+
+  alias_method :result_i_trust, :result_trust_me
+
 end
