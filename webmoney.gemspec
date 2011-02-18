@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{webmoney}
-  s.version = "0.0.10"
+  s.version = "0.0.11"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Oryol"]
-  s.date = %q{2011-01-17}
+  s.date = %q{2011-02-18}
   s.email = %q{eagle.alex@gmail.com}
   s.extensions = ["ext/wmsigner/extconf.rb"]
   s.extra_rdoc_files = [
@@ -55,11 +55,13 @@ Gem::Specification.new do |s|
     "rakefile",
     "spec/spec",
     "spec/spec_helper.rb",
+    "spec/unit/iconv_spec.rb",
     "spec/unit/messenger_spec.rb",
     "spec/unit/passport_spec.rb",
     "spec/unit/purse_spec.rb",
     "spec/unit/signer_spec.rb",
     "spec/unit/time_spec.rb",
+    "spec/unit/trust_spec.rb",
     "spec/unit/webmoney_spec.rb",
     "spec/unit/wmid_spec.rb",
     "webmoney.gemspec"
@@ -76,6 +78,7 @@ Gem::Specification.new do |s|
     "spec/unit/purse_spec.rb",
     "spec/unit/signer_spec.rb",
     "spec/unit/time_spec.rb",
+    "spec/unit/trust_spec.rb",
     "spec/unit/webmoney_spec.rb",
     "spec/unit/wmid_spec.rb"
   ]

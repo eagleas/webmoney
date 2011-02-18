@@ -1,10 +1,11 @@
 ChangeLog
 
-Fri Feb 18 2011 14:33:00 +0300
+Fri Feb 18 2011 18:30:00 +0300
 ----------------------------
   V 0.0.11
   * Add i_trust and trust_me interfaces
   * Trim reqn() to 14 digits. Warning: request to WebMoney Transfer support team for reset REQN counter, might be necessary!
+  * Fix error in create_invoice, create_transaction
 
 Wed Oct 06 2010 11:14:00 +0300
 ----------------------------
