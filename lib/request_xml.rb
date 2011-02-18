@@ -12,7 +12,7 @@ module Webmoney::RequestXML    # :nodoc:all
           x.mode opt[:mode] || 0
         }
         # unless mode == 1, signed data need'nt
-        x.sign( (classic? && opt[:mode]) ? sign(@wmid + opt[:wmid]) : nil )
+        x.sign( (classic? && opt[:mode]) ? sign("#{@wmid}#{opt[:wmid]}") : nil )
       }
     }
   end
@@ -36,10 +36,7 @@ module Webmoney::RequestXML    # :nodoc:all
           x.plan { x.cdata plan_in }
           x.sign opt[:sign]
         }
-        if classic?
-          plan = @wmid + opt[:wmid] + plan_out + opt[:sign]
-          x.sign sign(plan)
-        end
+        x.sign sign("#{@wmid}#{opt[:wmid]}#{plan_out}#{opt[:sign]}") if classic?
       }
     }
   end
@@ -57,10 +54,7 @@ module Webmoney::RequestXML    # :nodoc:all
           x.msgsubj { x.cdata subj_in }
           x.msgtext { x.cdata text_in }
         end
-        if classic?
-          @plan = opt[:wmid] + req + text_out + subj_out
-          x.sign sign(@plan)
-        end
+        x.sign sign("#{opt[:wmid]}#{req}#{text_out}#{subj_out}") if classic?
       }
     }
   end
@@ -75,10 +69,7 @@ module Webmoney::RequestXML    # :nodoc:all
           x.wmid( opt[:wmid] || '' )
           x.purse( opt[:purse] || '' )
         end
-        if classic?
-          @plan = "#{opt[:wmid]}#{opt[:purse]}"
-          x.sign sign(@plan)
-        end
+        x.sign sign("#{opt[:wmid]}#{opt[:purse]}") if classic?
       }
     }
   end

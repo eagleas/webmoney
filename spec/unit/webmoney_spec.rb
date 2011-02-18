@@ -164,8 +164,8 @@ describe Webmoney, "class" do
         :amount => 1,
         :customerwmid => @wm.wmid,
         :storepurse => WmConfig.second['wmz'],
-        :desc => "Test invoice",
-        :address => "Address"
+        :desc => "Invoice текст",
+        :address => "Address адрес"
       )
     end
 
