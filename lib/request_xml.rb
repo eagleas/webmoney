@@ -168,7 +168,7 @@ module Webmoney::RequestXML    # :nodoc:all
   end
 
   def xml_trust_me(opt)
-    req = reqn()[0..14]
+    req = reqn()
     Nokogiri::XML::Builder.new { |x|
       x.send('w3s.request') {
         x.reqn req

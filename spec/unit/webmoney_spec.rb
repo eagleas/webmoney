@@ -15,7 +15,7 @@ describe Webmoney, "class" do
     t1 = @wm.send(:reqn)
     sleep(0.1)
     t2 = @wm.send(:reqn)
-    t1.should match(/^\d{16}$/)
+    t1.should match(/^\d{14}$/)
     (t2 > t1).should be_true
   end
 
@@ -31,12 +31,12 @@ describe Webmoney, "class" do
 
   it "should correct reqn" do
     Time.stub!(:now).and_return(Time.at(1244704683.69677))
-    @wm.send(:reqn).should == '2009061111180369'
+    @wm.send(:reqn).should == '09061111180369'
   end
 
   it "should correct reqn with zero microsec" do
     Time.stub!(:now).and_return(Time.at(1244704683))
-    @wm.send(:reqn).should == '2009061111180300'
+    @wm.send(:reqn).should == '09061111180300'
   end
 
   it "should raise error on incorrect arg" do
