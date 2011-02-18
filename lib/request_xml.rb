@@ -83,7 +83,7 @@ module Webmoney::RequestXML    # :nodoc:all
       x.send('w3s.request') {
         x.reqn req
         x.wmid @wmid
-        x.sign sign("#{opt[:orderid]}#{opt[:customerwmid]}#{opt[:storepurse]}#{amount}#{desc_out}#{address_out}#{opt[:period]}#{opt[:expiration]}#{req}") if classic?
+        x.sign sign("#{opt[:orderid]}#{opt[:customerwmid]}#{opt[:storepurse]}#{amount}#{desc_out}#{address_out}#{opt[:period]||0}#{opt[:expiration]||0}#{req}") if classic?
         x.invoice do
           x.orderid opt[:orderid]
           x.customerwmid opt[:customerwmid]
@@ -102,12 +102,11 @@ module Webmoney::RequestXML    # :nodoc:all
     req = reqn()
     desc_in, desc_out = filter_str(opt[:desc])                  # description
     pcode = opt[:pcode].strip if opt[:period] > 0 && opt[:pcode]
-    wminvid = opt[:wminvid] || 0
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
       x.send('w3s.request') {
         x.reqn req
         x.wmid(@wmid)
-        x.sign sign("#{req}#{opt[:transid]}#{opt[:pursesrc]}#{opt[:pursedest]}#{opt[:amount]}#{opt[:period]}#{pcode}#{desc_out}#{wminvid}") if classic?
+        x.sign sign("#{req}#{opt[:transid]}#{opt[:pursesrc]}#{opt[:pursedest]}#{opt[:amount]}#{opt[:period]||0}#{pcode}#{desc_out}#{opt[:wminvid]||0}") if classic?
         x.trans {
           x.tranid opt[:transid]                      # transaction id - unique
           x.pursesrc opt[:pursesrc]                   # sender purse
