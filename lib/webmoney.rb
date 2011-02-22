@@ -86,10 +86,10 @@ module Webmoney
     # when uncovertable character in input sequence. It is default behavior.
     # With option :force_encoding Iconv initialized with //IGNORE option, and
     # uncovertable characters will be cutted.
+    @ic_in  = Iconv.new('UTF-8', 'CP1251')
     if opt[:force_encoding]
       #Iconv.new(to, from)
       @ic_out = Iconv.new('CP1251//IGNORE', 'UTF-8')
-      @ic_in  = Iconv.new('UTF-8', 'CP1251')
       instance_eval do
         def filter_str(str)
           str_out = @ic_out.iconv(str)

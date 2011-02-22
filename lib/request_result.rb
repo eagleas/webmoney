@@ -32,12 +32,12 @@ module Webmoney::RequestResult    # :nodoc:all
     res = {
       :retval => doc.at('//retval').inner_html.to_i,
       :retdesc   => (doc.at('//testwmpurse/retdesc').inner_html rescue nil),
-      :orderid  => (doc.at('//invoice/orderid').inner_html.to_i),
+      :orderid  => doc.at('//invoice/orderid').inner_html.to_i
     }
     if res[:retval] == 0
-      res[:id]  = (doc.at('//invoice').attributes['id'].value.to_i)
-      res[:ts]  = (doc.at('//invoice').attributes['ts'].value.to_i)
-      res[:state] = (doc.at('//invoice/state').inner_html.to_i)
+      res[:id]  = doc.at('//invoice')['id'].to_i
+      res[:ts]  = doc.at('//invoice')['ts'].to_i
+      res[:state] = doc.at('//invoice/state').inner_html.to_i
       res[:created_at] = Time.parse(doc.at('//invoice/datecrt').inner_html)
     end
     res
@@ -58,22 +58,21 @@ module Webmoney::RequestResult    # :nodoc:all
       :retval => doc.at('//retval').inner_html.to_i,
       :retdesc   => (doc.at('//testwmpurse/retdesc').inner_html rescue nil),
     }
-    if res[:retval] == 0
-      res[:invoices] = doc.at('//outinvoices').elements.collect do |invoice|
-        r = {
-          :id => invoice.attributes['id'].value.to_i,
-          :ts => invoice.attributes['ts'].value.to_i,
-        }
-        invoice.elements.each do |tag|
-          name = tag.name.to_sym
-          value = tag.inner_html
-          value = value.to_i if [:orderid, :tranid, :period, :expiration, :wmtranid, :state].include?(name)
-          value = value.to_f if [:rest, :amount, :comiss].include?(name)
-          value = Time.parse(value) if [:datecrt, :dateupd].include?(name)
-          r[name] = value
-        end
-        r
+    res[:invoices] = doc.xpath('//outinvoices/outinvoice').map do |invoice|
+      r = {
+        :id => invoice['id'].to_i,
+        :ts => invoice['ts'].to_i,
+      }
+      invoice.elements.each do |tag|
+        name = tag.name.to_sym
+        value = tag.inner_html
+        value = value.to_i if [:orderid, :tranid, :period, :expiration, :wmtranid, :state].include?(name)
+        value = value.to_f if [:rest, :amount, :comiss].include?(name)
+        value = Time.parse(value) if [:datecrt, :dateupd].include?(name)
+        value = @ic_in.iconv(value) if [:desc, :address].include?(name)
+        r[name] = value
       end
+      r
     end
     res
   end
