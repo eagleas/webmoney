@@ -115,7 +115,7 @@ module Webmoney::RequestXML    # :nodoc:all
           x.period( opt[:period] || 0 )                # protection period (0 - no protection)
           x.pcode( pcode ) if pcode  # protection code
           x.desc desc_in
-          x.wminvid( wminvid )             # invoice number (0 - without invoice)
+          x.wminvid( opt[:wminvid] || 0 )              # invoice number (0 - without invoice)
         }
       }
     }
