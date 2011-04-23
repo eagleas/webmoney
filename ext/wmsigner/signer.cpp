@@ -10,18 +10,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
-#define __open _open
-#define __read _read
-#define __close _close
 #else
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include <unistd.h>
 #include <errno.h>
-#define __open	open
-#define __read	read
-#define __close	close
 #endif
 
 #ifndef TRUE
@@ -115,9 +109,9 @@ int Signer::LoadKeys()
 
 if( (!isIgnoreKeyFile) && (Key64Flag == FALSE) ) {
   #ifdef O_BINARY
-  fh = __open( m_szKeyFileName, O_RDONLY | O_BINARY);
+  fh = open( m_szKeyFileName, O_RDONLY | O_BINARY);
   #else
-  fh = __open( m_szKeyFileName, O_RDONLY);
+  fh = open( m_szKeyFileName, O_RDONLY);
   #endif
 
   if( fh == -1 )
@@ -131,10 +125,10 @@ if( (!isIgnoreKeyFile) && (Key64Flag == FALSE) ) {
   if (st_size == lMinKeyFileSize)
   {
     // load 164 bytes from "small" keys file
-    nReaden = __read( fh, pBufRead, nMaxBufLen );
+    nReaden = read( fh, pBufRead, nMaxBufLen );
     bKeysReaded = (nReaden == lMinKeyFileSize);
   }
-  __close( fh );
+  close( fh );
 } 
 else {
    bKeysReaded = true;
