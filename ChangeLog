@@ -1,5 +1,10 @@
 ChangeLog
 
+Tue Arp 26 2011 16:31:00 +0400
+----------------------------
+  V 0.0.12
+  * Fix compile on gcc-4.5 under mingw (unnecessary macros removed)
+
 Fri Feb 18 2011 18:30:00 +0300
 ----------------------------
   V 0.0.11
