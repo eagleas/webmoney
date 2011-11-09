@@ -87,7 +87,7 @@ describe Webmoney, "class" do
 
   it "should check_sign with specials" do
     plan = '<test>текст</test>'
-    real_plan = Iconv.conv('CP1251', 'UTF-8', plan)
+    real_plan = @wm.utf8_to_cp1251(plan)
     begin
     @wm.request(:check_sign,
       :wmid => @wm.wmid,

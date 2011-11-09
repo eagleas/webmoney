@@ -7,7 +7,6 @@ require 'time'
 require 'net/http'
 require 'net/https'
 require 'rubygems'
-require 'iconv'
 require 'nokogiri'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
@@ -82,26 +81,46 @@ module Webmoney
 
     @rid = opt[:rid]
 
-    # Iconv will raise exception Iconv::IllegalSequence,
+    # encode will raise exception,
     # when uncovertable character in input sequence. It is default behavior.
-    # With option :force_encoding Iconv initialized with //IGNORE option, and
-    # uncovertable characters will be cutted.
-    @ic_in  = Iconv.new('UTF-8', 'CP1251')
-    if opt[:force_encoding]
-      #Iconv.new(to, from)
-      @ic_out = Iconv.new('CP1251//IGNORE', 'UTF-8')
-      instance_eval do
-        def filter_str(str)
-          str_out = @ic_out.iconv(str)
-          return @ic_in.iconv(str_out), str_out
-        end
+    # With option :force_encoding uncovertable characters will be cutted.
+    @force_encoding = opt[:force_encoding]
+
+    # for backward compatibility with ruby 1.8
+    if String.new.respond_to?(:encode)
+
+      # was: @ic_out
+      def utf8_to_cp1251(str)
+        return str if str.nil? || str.length < 1
+        @force_encoding ? str.encode('CP1251', 'UTF-8', :undef => :replace, :replace => '') : str.encode('CP1251', 'UTF-8')
       end
+
+      # was: @ic_in
+      def cp1251_to_utf8(str)
+        return str if str.empty?
+        str.encode('UTF-8', 'CP1251')
+      end
+
     else
-      @ic_out = Iconv.new('CP1251', 'UTF-8')
-      instance_eval do
-        def filter_str(str)
-          return str, @ic_out.iconv(str)
-        end
+      require 'iconv'
+
+      # was: @ic_out
+      def utf8_to_cp1251(str)
+        @force_encoding ? Iconv.iconv('CP1251//IGNORE', 'UTF-8', str)[0] : Iconv.iconv('CP1251', 'UTF-8', str)[0]
+      end
+
+      # was: @ic_in
+      def cp1251_to_utf8(str)
+        Iconv.iconv('UTF-8', 'CP1251', str)[0]
+      end
+    end
+
+    def filter_str(str)
+      if @force_encoding
+        str_out = utf8_to_cp1251(str)
+        [cp1251_to_utf8(str_out), str_out]
+      else
+        [str, utf8_to_cp1251(str)]
       end
     end
 

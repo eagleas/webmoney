@@ -1,6 +1,9 @@
 ChangeLog
 
-Tue Arp 26 2011 16:31:00 +0400
+  V 0.0.13-pre
+  * Compatibility with ruby 1.9.3(-p0) ( String#encode instead Iconv)
+
+Tue Apr 26 2011 16:31:00 +0400
 ----------------------------
   V 0.0.12
   * Fix compile on gcc-4.5 under mingw (unnecessary macros removed)

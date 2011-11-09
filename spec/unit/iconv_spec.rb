@@ -7,14 +7,18 @@ describe 'filter_str' do
 
   it "default behavior" do
     @wm = TestWM.new
-    lambda { @wm.filter_str(test)}.should raise_error(Iconv::IllegalSequence)
+    if  String.new.respond_to?(:encode)
+      lambda { @wm.filter_str(test) }.should raise_error(Encoding::UndefinedConversionError)
+    else
+      lambda { @wm.filter_str(test) }.should raise_error(Iconv::IllegalSequence)
+    end
   end
 
   it "with force_encoding" do
     @wm = TestWM.new(:force_encoding => true)
     input, output = @wm.filter_str(test)
-    output.should == Iconv.iconv('CP1251//IGNORE', 'UTF-8', test)[0]
-    input.should == Iconv.iconv('UTF-8', 'CP1251', output)[0]
+    output.should == "nykpek-0001.xls"
+    input.should  == "nykpek-0001.xls"
   end
 
   it "should send message with ignore characters" do

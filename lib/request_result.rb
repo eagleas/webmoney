@@ -69,7 +69,7 @@ module Webmoney::RequestResult    # :nodoc:all
         value = value.to_i if [:orderid, :tranid, :period, :expiration, :wmtranid, :state].include?(name)
         value = value.to_f if [:rest, :amount, :comiss].include?(name)
         value = Time.parse(value) if [:datecrt, :dateupd].include?(name)
-        value = @ic_in.iconv(value) if [:desc, :address].include?(name)
+        value = cp1251_to_utf8(value) if [:desc, :address].include?(name)
         r[name] = value
       end
       r
