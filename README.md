@@ -1,4 +1,4 @@
-== About Webmoney library
+# About Webmoney library
 
 This library should help to make requests to WebMoney Transfer http://www.wmtransfer.com
 XML-interfaces: http://www.wmtransfer.com/eng/developers/interfaces/index.shtml
@@ -11,33 +11,35 @@ Reqirements: Nokogiri >= 1.4.1 built with libxml2 >= 2.7 (IMPORTANT!)
 Author::    Alexander Oryol (mailto:eagle.alex@gmail.com)
 License::   MIT License
 
-== Request types
+# Request types
 
 Completed:
-- create_invoice     - x1
-- create_transaction - x2
-- outgoing_invoices  - x4
-- send_message       - x6
-- find_wm            - x8
-- get_passport       - x11
-- i_trust            - x15
-- trust_me           - x15
-- check_owner        - x19
-- bussines_level
-- login
+
+* create_invoice     - x1
+* create_transaction - x2
+* outgoing_invoices  - x4
+* send_message       - x6
+* find_wm            - x8
+* get_passport       - x11
+* i_trust            - x15
+* trust_me           - x15
+* check_owner        - x19
+* bussines_level
+* login
 
 Incompleted (help need!):
-- operation_history  - x3
-- finish_protect     - x5
-- check_sign         - x7
-- balance            - x9
-- incoming_invoices  - x10
-- reject_protection  - x13
-- transaction_moneyback - x14
-- trust_save            - x15
-- create_purse          - x16
-- create_contract       - x17
-- transaction_get       - x18
+
+* operation_history  - x3
+* finish_protect     - x5
+* check_sign         - x7
+* balance            - x9
+* incoming_invoices  - x10
+* reject_protection  - x13
+* transaction_moneyback - x14
+* trust_save            - x15
+* create_purse          - x16
+* create_contract       - x17
+* transaction_get       - x18
 
 
 Please, see relative documentation and parameters on wiki:
@@ -52,27 +54,35 @@ http://www.wmtransfer.com/eng/developers/interfaces/xml/index.shtml
 
 http://www.webmoney.ru/rus/developers/interfaces/xml/index.shtml (in russian)
 
-== Examples
+# Examples
 
-= Setup
+## Setup
 
+```ruby
 class MyWM
   include Webmoney
 end
+```
 
+```ruby
 @wm = MyWM.new(:wmid => '123456789012', :password => 'my_pass', :key => 'gQABAIR6...2cC8FZTyKyjBM=')
 
 wmid = '111222333444'
+```
 
-= Light
+## Light
 
+```ruby
 cert = OpenSSL::X509::Certificate.new(File.read("webmoney.cert"))
 key = OpenSSL::PKey::RSA.new(File.read("webmoney.key"), "password")
 mywm = MyWM.new(:wmid => '123456789012', :cert => cert, :key => key)
+```
 
-= Passport (X11)
+## Passport (X11)
 
 Get attestat data:
+
+```ruby
 passport = Webmoney::Passport.new(wmid)
 passport.attestat     # { # hash
                       #   :attestat => 110, # == FORMAL attestat, as example
@@ -84,17 +94,25 @@ passport.wmids        # All wmids attached to the attestat
 passport.userinfo[:country]          # => 'Russia' # Userinfo fields in string context
 passport.userinfo[:country].checked  # => true     # with checked/locked attribute
 passport.directory    # Base dictionary
+```
 
-= Bussines level
+## Bussines level
 
+```ruby
 bl = @wm.request(:bussines_level, :wmid => wmid)       #  => 15
+```
 
-= Sending message
+## Sending message
 
 ... for one message:
+
+```ruby
 @wm.request(:send_message, :wmid => wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>')
+```
 
 ... for many messages (with queue):
+
+```ruby
 @wm.send_message(:wmid => wmid, :subj => 'Subject', :text => 'Body of \<b>message\</b>') do |msg, result|
   File.open("logfile", "w") do |file|
     case result
@@ -105,21 +123,27 @@ bl = @wm.request(:bussines_level, :wmid => wmid)       #  => 15
     end
   end
 end
+```
 
-= Purses and WMIDs
+## Purses and WMIDs
 
+```ruby
 @wm.wmid_exist?('123456789012')                   # => true
 
 purse = Purse.new('Z123456789012')
 purse.wmid                                        # => '123456789012'
 purse.belong_to?('123456789012')                  # => true
+```
 
+## Example: Create invoice and check it's state
 
-== Example: Create invoice and check it's state
-
+```ruby
 @wm = MyWM.new(:wmid => '123456789012', :password => 'my_pass', :key => 'gQABAIR6...2cC8FZTyKyjBM=')
+```
 
-# Create invoice
+### Create invoice
+
+```ruby
 @invoice = @wm.request(:create_invoice,
   :orderid => 5,
   :amount => 10,
@@ -128,8 +152,11 @@ purse.belong_to?('123456789012')                  # => true
   :desc => "Test invoice",
   :address => "Delivery Address"
 )
+```
 
-# Check state
+### Check state
+
+```ruby
 res = @wm.request(:outgoing_invoices,
   :purse => STORE_PURSE,
   :wminvid => @invoice[:id],
@@ -147,9 +174,11 @@ if res[:retval].should == 0 && !res[:invoices].empty?
     when 3 then # Rejected
   end
 end
+```
 
-# Check purse owner
+## Check purse owner
 
+```ruby
 res = @wm.request(:check_owner,
   :user_wmid => CUSTOMER_WMID,
   :operation_type => 2, # Система денежных платежей
@@ -158,5 +187,6 @@ res = @wm.request(:check_owner,
   :first_name => @user[:first_name],
   :last_name => @user[:last_name]
 )
+```
 
 Also, see spec/* for examples.
