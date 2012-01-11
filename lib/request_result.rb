@@ -98,4 +98,10 @@ module Webmoney::RequestResult    # :nodoc:all
 
   alias_method :result_i_trust, :result_trust_me
 
+  def result_check_owner(doc)
+    {
+      :retval => doc.at('//retval').inner_html.to_i
+    }
+  end
+
 end

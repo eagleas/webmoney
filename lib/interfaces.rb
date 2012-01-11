@@ -21,6 +21,7 @@ module Webmoney
       :create_purse        => w3s_url + 'XMLCreatePurse.asp',   # x16
       :create_contract => 'https://arbitrage.webmoney.ru/xml/X17_CreateContract.aspx', # x17
       :transaction_get => 'https://merchant.webmoney.ru/conf/xml/XMLTransGet.asp',     # x18
+      :check_owner     => 'https://apipassport.webmoney.ru/XMLCheckUserCert.aspx',     # x19
       :bussines_level  => 'https://stats.wmtransfer.com/levels/XMLWMIDLevel.aspx',
       :login           => 'https://login.wmtransfer.com/ws/authorize.xiface'           # login
     }

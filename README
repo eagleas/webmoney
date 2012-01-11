@@ -22,6 +22,7 @@ Completed:
 - get_passport       - x11
 - i_trust            - x15
 - trust_me           - x15
+- check_owner        - x19
 - bussines_level
 - login
 
@@ -147,5 +148,15 @@ if res[:retval].should == 0 && !res[:invoices].empty?
   end
 end
 
+# Check purse owner
+
+res = @wm.request(:check_owner,
+  :user_wmid => CUSTOMER_WMID,
+  :operation_type => 2, # Система денежных платежей
+  :amount => 100,
+  :pursetype => "WMZ",
+  :first_name => @user[:first_name],
+  :last_name => @user[:last_name]
+)
 
 Also, see spec/* for examples.

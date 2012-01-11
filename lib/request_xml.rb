@@ -171,4 +171,25 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
+  def xml_check_owner(opt)
+    req = reqn()
+    Nokogiri::XML::Builder.new { |x|
+      x.send('passport.request') {
+        x.reqn req
+        x.signerwmid @wmid
+        x.sign sign("#{req}#{opt[:operation_type]}#{opt[:user_wmid]}") if classic?
+        x.operation do
+          x.type_ opt[:operation_type]
+          x.amount opt[:amount]
+          x.pursetype opt[:pursetype]
+        end
+        x.userinfo do
+          x.wmid opt[:user_wmid]
+          x.iname opt[:first_name]
+          x.fname opt[:last_name]
+        end
+      }
+    }
+  end
+
 end
