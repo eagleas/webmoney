@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.authors = ["Alexander Oryol"]
   s.date = %q{2012-01-13}
   s.email = %q{eagle.alex@gmail.com}
+  s.executables = ["ldiff", "rspec", "rake", "htmldiff", "rake-compiler", "nokogiri", "jeweler", "autospec"]
   s.extensions = ["ext/wmsigner/extconf.rb"]
   s.extra_rdoc_files = [
     "ChangeLog",
@@ -19,10 +20,17 @@ Gem::Specification.new do |s|
   s.files = [
     "ChangeLog",
     "Gemfile",
-    "Gemfile.lock",
     "README.md",
     "RUNNING_TESTS",
     "VERSION",
+    "bin/autospec",
+    "bin/htmldiff",
+    "bin/jeweler",
+    "bin/ldiff",
+    "bin/nokogiri",
+    "bin/rake",
+    "bin/rake-compiler",
+    "bin/rspec",
     "ext/wmsigner/base64.cpp",
     "ext/wmsigner/base64.h",
     "ext/wmsigner/cmdbase.cpp",
@@ -55,7 +63,10 @@ Gem::Specification.new do |s|
     "rakefile",
     "spec/spec",
     "spec/spec_helper.rb",
+    "spec/unit/check_user.rb",
     "spec/unit/iconv_spec.rb",
+    "spec/unit/interfaces_spec.rb",
+    "spec/unit/login_spec.rb",
     "spec/unit/messenger_spec.rb",
     "spec/unit/passport_spec.rb",
     "spec/unit/purse_spec.rb",
@@ -70,42 +81,28 @@ Gem::Specification.new do |s|
   s.rubyforge_project = %q{webmoney}
   s.rubygems_version = %q{1.6.2}
   s.summary = %q{Webmoney interfaces and native wmsigner}
-  s.test_files = [
-    "spec/spec_helper.rb",
-    "spec/unit/iconv_spec.rb",
-    "spec/unit/interfaces_spec.rb",
-    "spec/unit/login_spec.rb",
-    "spec/unit/messenger_spec.rb",
-    "spec/unit/passport_spec.rb",
-    "spec/unit/purse_spec.rb",
-    "spec/unit/signer_spec.rb",
-    "spec/unit/time_spec.rb",
-    "spec/unit/trust_spec.rb",
-    "spec/unit/webmoney_spec.rb",
-    "spec/unit/wmid_spec.rb"
-  ]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<nokogiri>, [">= 0"])
-      s.add_development_dependency(%q<rspec>, ["~> 2.3.0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
+      s.add_development_dependency(%q<rspec>, [">= 0"])
+      s.add_development_dependency(%q<bundler>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<rake-compiler>, [">= 0"])
     else
       s.add_dependency(%q<nokogiri>, [">= 0"])
-      s.add_dependency(%q<rspec>, ["~> 2.3.0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
+      s.add_dependency(%q<rspec>, [">= 0"])
+      s.add_dependency(%q<bundler>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<rake-compiler>, [">= 0"])
     end
   else
     s.add_dependency(%q<nokogiri>, [">= 0"])
-    s.add_dependency(%q<rspec>, ["~> 2.3.0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
+    s.add_dependency(%q<rspec>, [">= 0"])
+    s.add_dependency(%q<bundler>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<rake-compiler>, [">= 0"])
   end
 end
