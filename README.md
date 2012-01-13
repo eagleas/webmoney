@@ -180,12 +180,16 @@ end
 
 ```ruby
 res = @wm.request(:check_owner,
-  :user_wmid => CUSTOMER_WMID,
-  :operation_type => 2, # Система денежных платежей
-  :amount => 100,
-  :pursetype => "WMZ",
-  :first_name => @user[:first_name],
-  :last_name => @user[:last_name]
+  :operation => {
+    :type => 2,
+    :amount => 100,
+    :pursetype => "WMZ"
+  },
+  :userinfo => {
+    :wmid => "123445532523",
+    :iname => "Alexander",
+    :fname => "Ivanov"
+  }
 )
 ```
 
