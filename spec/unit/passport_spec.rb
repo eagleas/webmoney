@@ -12,6 +12,10 @@ describe Webmoney::Passport, "class" do
     Webmoney::Passport.new(@wm.wmid).should be_instance_of(Webmoney::Passport)
   end
 
+  # If you get Webmoney::NonExistentWmidError, visit into browser
+  # http://passport.webmoney.ru/asp/CertView.asp?wmid=000000000001
+  # resolve captcha and retry
+
   it "request result get_passport should be hash with data" do
     wmid = '000000000007'
     res = @wm.request(:get_passport, :wmid => wmid, :dict => 1)

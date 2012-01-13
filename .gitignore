@@ -1,4 +1,5 @@
 .bundle
+Gemfile.lock
 doc/*
 lib/wmsigner.so
 pkg/*

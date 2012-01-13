@@ -73,6 +73,8 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/spec_helper.rb",
     "spec/unit/iconv_spec.rb",
+    "spec/unit/interfaces_spec.rb",
+    "spec/unit/login_spec.rb",
     "spec/unit/messenger_spec.rb",
     "spec/unit/passport_spec.rb",
     "spec/unit/purse_spec.rb",

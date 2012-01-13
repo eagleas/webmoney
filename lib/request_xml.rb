@@ -171,7 +171,7 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
-  def xml_check_owner(opt)
+  def xml_check_user(opt)
     req = reqn()
     Nokogiri::XML::Builder.new { |x|
       x.send('passport.request') {

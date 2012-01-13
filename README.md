@@ -23,7 +23,7 @@ Completed:
 * get_passport       - x11
 * i_trust            - x15
 * trust_me           - x15
-* check_owner        - x19
+* check_user         - x19
 * bussines_level
 * login
 
@@ -179,7 +179,7 @@ end
 ## Check purse owner
 
 ```ruby
-res = @wm.request(:check_owner,
+res = @wm.request(:check_user,
   :operation => {
     :type => 2,
     :amount => 100,

@@ -19,16 +19,6 @@ describe Webmoney, "class" do
     (t2 > t1).should be_true
   end
 
-  it "should correct prepare interfaces urls" do
-    wm = TestWM.new :wmid => WmConfig.first['wmid'], :key => nil
-    wm.should_not be_classic
-    wm.interfaces[:balance].class.should == URI::HTTPS
-    # converted to light-auth version
-    wm.interfaces[:balance].to_s.should == 'https://w3s.wmtransfer.com/asp/XMLPursesCert.asp'
-    # non-converted to light-auth version
-    wm.interfaces[:get_passport].to_s.should == 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp'
-  end
-
   it "should correct reqn" do
     Time.stub!(:now).and_return(Time.at(1244704683.69677))
     @wm.send(:reqn).should == '09061111180369'
@@ -47,14 +37,6 @@ describe Webmoney, "class" do
   it "should send request" do
     doc = Nokogiri.XML(@wm.send(:https_request, :check_sign, '<w3s.request/>'))
     doc.root.should_not be_nil
-  end
-
-  it"should raise error on bad response" do
-    lambda { @wm.send(:https_request,
-      'https://w3s.wmtransfer.com/asp/XMLUnexistantIface.asp', '<w3s.request/>')}.
-      should raise_error(Webmoney::RequestError)
-    @wm.error.should == '404'
-    @wm.errormsg.should match(/^<!DOCTYPE HTML PUBLIC/)
   end
 
   it "should parse retval and raise error" do
@@ -190,35 +172,6 @@ describe Webmoney, "class" do
       res[:invoices].length.should == 1
       res[:invoices][0][:state].should == 0
       res[:invoices][0][:amount].should == 1
-    end
-  end
-
-  describe "login interface" do
-
-    before(:each) do
-      @ca = contragent()
-    end
-
-    it "return InvalidArgument" do
-      lambda { @ca.request(:login,
-        :WmLogin_WMID => @ca.wmid,
-        :WmLogin_UrlID => 'invalid_rid')
-      }.should raise_error(Webmoney::ResultError, "1 InvalidArgument")
-      @ca.error.should == 1
-      @ca.errormsg.should == 'InvalidArgument'
-    end
-
-    it "return InvalidTicket" do
-      lambda { @ca.request(:login,
-        :WmLogin_WMID => @ca.wmid,
-        :WmLogin_UrlID => @ca.rid,
-        :WmLogin_Ticket => 'XVWuooAEOJ0gG5NyDXJ0Zu0GffroqkG7APNKFmCAzA7XNVSx',
-        :WmLogin_AuthType => 'KeeperLight',
-        :remote_ip => '127.0.0.1'
-        )
-      }.should raise_error(Webmoney::ResultError)
-      @ca.error.should == 2
-      @ca.errormsg.should == 'FalseTicket'
     end
   end
 
