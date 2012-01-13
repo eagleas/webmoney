@@ -178,25 +178,13 @@ module Webmoney
 
   protected
 
-  def prepare_interface_urls
-    @interfaces = interface_urls.inject({}) do |m,k|
-      url = k[1]
-      url.sub!(/(\.asp)/, 'Cert.asp') if !classic? && url.match("^"+w3s_url)
-      m.merge!(k[0] => URI.parse(url))
-    end
-  end
-
   # Make HTTPS request, return result body if 200 OK
 
   def https_request(iface, xml)
     @last_request = @last_response = nil
-    url = case iface
-      when Symbol
-        @interfaces[iface]
-      when String
-        URI.parse(iface)
-    end
-    raise ArgumentError, iface unless url
+
+    url = @interfaces[iface]
+
     http = Net::HTTP.new(url.host, url.port)
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     if File.file? @ca_cert
