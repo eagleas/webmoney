@@ -44,7 +44,7 @@ module Webmoney
         url = default_lambda.call(url) if !classic?
       else
         transform = k[1][:x509]
-        url = transform.call(url) if !classic? && transform && transform.lambda?
+        url = transform.call(url) if !classic? && transform && transform.respond_to?(:call)
       end
       m.merge!(k[0] => URI.parse(url))
     end

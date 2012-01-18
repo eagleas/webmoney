@@ -44,4 +44,12 @@ module Webmoney::RequestRetval    # :nodoc:all
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
   end
 
+  def retval_check_user(doc)
+    retval_element = doc.at('//retval')
+    @error = retval_element.inner_html.to_i
+    @errormsg = doc.at('//retdesc') ? doc.at('//retdesc').inner_html : ''
+    not_exception_result_errors = [0, 404]
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless not_exception_result_errors.include?(@error)
+  end
+
 end

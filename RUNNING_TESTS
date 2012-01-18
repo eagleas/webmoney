@@ -18,8 +18,8 @@ second:
   key: webmoney.key
   wmz: Z012345678901
   rid: 57f9ff86-1afb-431f-aff4-9dfb00b70773     # site RID from login.wmtransfer.com
-
-
+  iname: "Alexander" # should be real first name for this WMID
+  fname: "Ivanov" # should be real last name for this WMID
 
 HOWTO convert Light-keys:
 Russian: https://wiki.webmoney.ru/wiki/show/Konvertatsiya_klyuchey_WM_Keeper_Light_v_PEM_format
