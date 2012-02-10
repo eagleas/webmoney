@@ -4,14 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{webmoney}
+  s.name = "webmoney"
   s.version = "0.0.12"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Oryol"]
-  s.date = %q{2012-01-13}
-  s.email = %q{eagle.alex@gmail.com}
-  s.executables = ["ldiff", "rspec", "rake", "htmldiff", "rake-compiler", "nokogiri", "jeweler", "autospec"]
+  s.date = "2012-02-10"
+  s.email = "eagle.alex@gmail.com"
   s.extensions = ["ext/wmsigner/extconf.rb"]
   s.extra_rdoc_files = [
     "ChangeLog",
@@ -23,14 +22,6 @@ Gem::Specification.new do |s|
     "README.md",
     "RUNNING_TESTS",
     "VERSION",
-    "bin/autospec",
-    "bin/htmldiff",
-    "bin/jeweler",
-    "bin/ldiff",
-    "bin/nokogiri",
-    "bin/rake",
-    "bin/rake-compiler",
-    "bin/rspec",
     "ext/wmsigner/base64.cpp",
     "ext/wmsigner/base64.h",
     "ext/wmsigner/cmdbase.cpp",
@@ -60,8 +51,9 @@ Gem::Specification.new do |s|
     "lib/request_xml.rb",
     "lib/webmoney.rb",
     "lib/wmid.rb",
-    "rakefile",
-    "spec/spec",
+    "rakefile"
+  ]
+  s.test_files = [
     "spec/spec_helper.rb",
     "spec/unit/check_user.rb",
     "spec/unit/iconv_spec.rb",
@@ -78,9 +70,9 @@ Gem::Specification.new do |s|
     "webmoney.gemspec"
   ]
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{webmoney}
-  s.rubygems_version = %q{1.6.2}
-  s.summary = %q{Webmoney interfaces and native wmsigner}
+  s.rubyforge_project = "webmoney"
+  s.rubygems_version = "1.8.15"
+  s.summary = "Webmoney interfaces and native wmsigner"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
