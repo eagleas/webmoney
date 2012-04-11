@@ -74,7 +74,7 @@ module Webmoney
     # ca_cert or default
     @ca_cert =
       if opt[:ca_cert].nil?
-         File.dirname(__FILE__) + '/../lib/certs/'
+         File.dirname(__FILE__) + '/../ssl-certs/ca_bundle.crt'
       else
         opt[:ca_cert]
       end

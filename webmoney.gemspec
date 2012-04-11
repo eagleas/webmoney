@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Oryol"]
-  s.date = "2012-02-10"
+  s.date = "2012-04-11"
   s.email = "eagle.alex@gmail.com"
   s.extensions = ["ext/wmsigner/extconf.rb"]
   s.extra_rdoc_files = [
@@ -38,10 +38,6 @@ Gem::Specification.new do |s|
     "ext/wmsigner/stdafx.cpp",
     "ext/wmsigner/stdafx.h",
     "ext/wmsigner/wmsigner.cpp",
-    "lib/certs/0b532bc2.0",
-    "lib/certs/3c58f906.0",
-    "lib/certs/AddTrust_External_Root.crt",
-    "lib/certs/WebMoneyCA.crt",
     "lib/interfaces.rb",
     "lib/messenger.rb",
     "lib/passport.rb",
@@ -51,9 +47,7 @@ Gem::Specification.new do |s|
     "lib/request_xml.rb",
     "lib/webmoney.rb",
     "lib/wmid.rb",
-    "rakefile"
-  ]
-  s.test_files = [
+    "rakefile",
     "spec/spec_helper.rb",
     "spec/unit/check_user.rb",
     "spec/unit/iconv_spec.rb",
@@ -67,12 +61,16 @@ Gem::Specification.new do |s|
     "spec/unit/trust_spec.rb",
     "spec/unit/webmoney_spec.rb",
     "spec/unit/wmid_spec.rb",
+    "ssl-certs/AddTrust_External_Root.crt",
+    "ssl-certs/WebMoneyCA.crt",
+    "ssl-certs/ca_bundle.crt",
     "webmoney.gemspec"
   ]
   s.require_paths = ["lib"]
   s.rubyforge_project = "webmoney"
-  s.rubygems_version = "1.8.15"
+  s.rubygems_version = "1.8.17"
   s.summary = "Webmoney interfaces and native wmsigner"
+  s.test_files = ["Gemfile", "spec/spec_helper.rb", "spec/unit/interfaces_spec.rb", "spec/unit/check_user.rb", "spec/unit/purse_spec.rb", "spec/unit/messenger_spec.rb", "spec/unit/iconv_spec.rb", "spec/unit/webmoney_spec.rb", "spec/unit/signer_spec.rb", "spec/unit/time_spec.rb", "spec/unit/wmid_spec.rb", "spec/unit/trust_spec.rb", "spec/unit/login_spec.rb", "spec/unit/passport_spec.rb"]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3

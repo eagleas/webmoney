@@ -28,9 +28,8 @@ spec = begin
     gemspec.authors = ["Alexander Oryol"]
     gemspec.email =  "eagle.alex@gmail.com"
     gemspec.summary = "Webmoney interfaces and native wmsigner"
-    gemspec.files << %w( rakefile ChangeLog lib/WebMoneyCA.crt ) +
-                      Dir.glob( 'ext/**/*.{h,cpp,rb}' ) +
-                      Dir.glob( 'tools/*.rb' )
+    gemspec.files += %w( ChangeLog ) + Dir.glob( 'ssl-certs/*.crt' )
+    gemspec.test_files += %w( Gemfile ) + Dir.glob( 'spec/**/*.rb' )
 
     if RUBY_PLATFORM.match("win32")
       gemspec.platform = Gem::Platform::WIN32
