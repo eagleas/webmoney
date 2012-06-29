@@ -163,7 +163,7 @@ module Webmoney::RequestXML    # :nodoc:all
       x.send('w3s.request') {
         x.reqn req
         x.wmid @wmid
-        x.sign sign("#{opt[:wmid]}#{req}")
+        x.sign sign("#{opt[:wmid]}#{req}") if classic?
         x.gettrustlist do
           x.wmid opt[:wmid]
         end
