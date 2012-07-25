@@ -37,16 +37,16 @@ module Webmoney
     # default transform to x509 version for w3s urls
     default_lambda = lambda {|url| url.sub(/\.asp$/, 'Cert.asp') }
 
-    @interfaces = interface_urls.inject({}) do |m,k|
-      url = k[1][:url]
+    @interfaces = interface_urls.inject({}) do |m,(k,v)|
+      url = v[:url]
       unless url.match %r{^https://}
         url = w3s_url + url
         url = default_lambda.call(url) if !classic?
       else
-        transform = k[1][:x509]
+        transform = v[:x509]
         url = transform.call(url) if !classic? && transform && transform.respond_to?(:call)
       end
-      m.merge!(k[0] => URI.parse(url))
+      m.merge!(k => URI.parse(url))
     end
 
   end
