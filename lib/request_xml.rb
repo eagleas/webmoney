@@ -193,4 +193,18 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
+  def xml_balance(opt)
+    req = reqn()
+    Nokogiri::XML::Builder.new { |x|
+      x.send('w3s.request') {
+        x.reqn req
+        x.wmid @wmid
+        x.sign sign("#{opt[:wmid]}#{req}") if classic?
+        x.getpurses do
+          x.wmid opt[:wmid]
+        end
+      }
+    }
+  end
+
 end
