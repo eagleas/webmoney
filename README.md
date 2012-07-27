@@ -20,6 +20,7 @@ Completed:
 * outgoing_invoices  - x4
 * send_message       - x6
 * find_wm            - x8
+* balance            - x9
 * get_passport       - x11
 * i_trust            - x15
 * trust_me           - x15
@@ -32,7 +33,6 @@ Incompleted (help need!):
 * operation_history  - x3
 * finish_protect     - x5
 * check_sign         - x7
-* balance            - x9
 * incoming_invoices  - x10
 * reject_protection  - x13
 * transaction_moneyback - x14
