@@ -104,4 +104,19 @@ module Webmoney::RequestResult    # :nodoc:all
     }
   end
 
+  def result_balance(doc)
+    purses = []
+    doc.at('//purses').children.each do |purse|
+      purses_hash = {}
+      purse.children.each do |child|
+        purses_hash[child.name.to_sym] = child.content
+      end
+      purses << purses_hash unless purses_hash.empty?
+    end
+    {
+      :purses => purses,
+      :retval => doc.at('//retval').inner_html.to_i
+    }
+  end
+
 end

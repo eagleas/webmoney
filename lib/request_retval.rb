@@ -52,4 +52,11 @@ module Webmoney::RequestRetval    # :nodoc:all
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless not_exception_result_errors.include?(@error)
   end
 
+  def retval_balance(doc)
+    retval_element = doc.at('//retval')
+    @error = retval_element.inner_html.to_i
+    @errormsg = doc.at('//retdesc') ? doc.at('//retdesc').inner_html : ''
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
+  end
+
 end
