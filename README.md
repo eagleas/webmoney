@@ -83,7 +83,7 @@ mywm = MyWM.new(:wmid => '123456789012', :cert => cert, :key => key)
 Get attestat data:
 
 ```ruby
-passport = Webmoney::Passport.new(wmid)
+passport = Webmoney::Passport.new(wmid, :mode => 1) # optionally :mode, :dict, :info
 passport.attestat     # { # hash
                       #   :attestat => 110, # == FORMAL attestat, as example
                       #   :created_at => Wed Feb 25 21:54:01 +0300 2004 # Time object

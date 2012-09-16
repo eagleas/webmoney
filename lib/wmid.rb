@@ -10,8 +10,8 @@ module Webmoney
       raise IncorrectWmidError, str unless str =~ /^\d{12}$/
       super(str)
     end
-    
+
     def wmid; self end
-    
+
   end
 end

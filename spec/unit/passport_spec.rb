@@ -78,7 +78,7 @@ describe Webmoney::Passport, "class" do
   end
 
   it "should have wmids" do
-    passport = Webmoney::Passport.new(@wm.wmid)
+    passport = Webmoney::Passport.new(@wm.wmid, :mode => 1)
     passport.wmids.should be_instance_of(Hash)
     passport.wmids.has_key?(@wm.wmid).should be_true
     passport.wmids[@wm.wmid].should be_instance_of(Hash)

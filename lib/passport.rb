@@ -30,6 +30,12 @@ module Webmoney
       @@worker
     end
 
+    # extra permit :dict, :info, :dict params
+    def initialize(str, extra = {})
+      super(str)
+      @extra = extra
+    end
+
     # memoize data
     def attestat; @attestat ||= getinfo[:attestat] end
     def directory; @directory ||= getinfo[:directory] end
@@ -40,12 +46,7 @@ module Webmoney
     protected
 
     def getinfo
-      info = @@worker.request(:get_passport, :wmid => self)
-      @attestat = info[:attestat]
-      @full_access = info[:full_access]
-      @userinfo = info[:userinfo]
-      @directory = info[:directory]
-      info
+      @info ||= @@worker.request(:get_passport, @extra.merge(:wmid => self))
     end
 
     def self.parse_result(doc)
