@@ -13,7 +13,8 @@ module Webmoney
       :find_wm            => { :url => 'XMLFindWMPurse.asp' },   # x8
       :balance            => { :url => 'XMLPurses.asp' },        # x9
       :incoming_invoices  => { :url => 'XMLInInvoices.asp' },    # x10
-      :get_passport       => { :url => 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp' }, # x11
+      :get_passport       => { :url => 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp' , # x11
+                               :x509 => lambda {|url| url.sub(/\.asp$/, 'Cert.asp')} },
       :reject_protection  => { :url => 'XMLRejectProtect.asp' }, # x13
       :transaction_moneyback => { :url => 'XMLTransMoneyback.asp' }, # x14
       :i_trust            => { :url => 'XMLTrustList.asp'  },    # x15

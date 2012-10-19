@@ -1,5 +1,6 @@
 .bundle
 Gemfile.lock
+bin/*
 doc/*
 lib/wmsigner.so
 pkg/*

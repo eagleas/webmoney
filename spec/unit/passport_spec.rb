@@ -5,7 +5,7 @@ require 'date'
 describe Webmoney::Passport, "class" do
 
   before(:each) do
-    @wm = TestWM.new
+    @wm = webmoney()
   end
 
   it "should return Passport instance" do

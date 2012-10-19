@@ -28,7 +28,7 @@ describe "interfaces url" do
     wml.interfaces[:balance].to_s.should == 'https://w3s.wmtransfer.com/asp/XMLPursesCert.asp'
     wml.interfaces[:check_user].to_s.should == 'https://apipassport.webmoney.ru/XMLCheckUserCert.aspx'
     # non-converted
-    wml.interfaces[:get_passport].to_s.should == 'https://passport.webmoney.ru/asp/XMLGetWMPassport.asp'
+    wml.interfaces[:transaction_get].to_s.should == 'https://merchant.webmoney.ru/conf/xml/XMLTransGet.asp'
   end
 
 end
