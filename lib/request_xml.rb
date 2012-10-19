@@ -4,7 +4,7 @@ module Webmoney::RequestXML    # :nodoc:all
   def xml_get_passport(opt)
     Nokogiri::XML::Builder.new { |x|
       x.request {
-        x.wmid @wmid
+        x.wmid @wmid if classic?
         x.passportwmid opt[:wmid]
         x.params {
           x.dict opt[:dict] || 0
