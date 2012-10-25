@@ -45,7 +45,7 @@ extern "C" VALUE signer_new(VALUE self, VALUE szWMID, VALUE szPwd, VALUE szKeyDa
 {
     Signer *pSign;
 
-    if(NIL_P(szWMID))	rb_raise(rb_eArgError, "nil wmid");    
+    if(NIL_P(szWMID))	rb_raise(rb_eArgError, "nil wmid");
 
     // check WMID
     if (! IsWmid(RSTRING_PTR(szWMID))) rb_raise(rb_eArgError, "Incorrect WMID");
@@ -56,7 +56,7 @@ extern "C" VALUE signer_new(VALUE self, VALUE szWMID, VALUE szPwd, VALUE szKeyDa
 
     // check base64 data
     if ( RSTRING_LEN(szKeyData64) != 220 ) rb_raise(rb_eArgError, "Illegal size for base64 keydata");
-    
+
     char KeyBuffer[ASCII_SIZE];
     int bytes = code64( ENCODE, KeyBuffer, ASCII_SIZE, RSTRING_PTR(szKeyData64), BUF_64_SIZE );
 
@@ -68,7 +68,7 @@ extern "C" VALUE signer_new(VALUE self, VALUE szWMID, VALUE szPwd, VALUE szKeyDa
 
     pSign->isIgnoreKeyFile = TRUE;
     pSign->Key64Flag = TRUE;
-        
+
     if (pSign) pSign->SetKeyFromCL( TRUE, KeyBuffer );
 
     return tdata;
@@ -86,12 +86,12 @@ extern "C" VALUE signer_sign(VALUE self, VALUE szIn)
 
     Signer *pSign;
 
-    Data_Get_Struct(self, Signer, pSign);    
-    
+    Data_Get_Struct(self, Signer, pSign);
+
     if(NIL_P(szIn)) rb_raise(rb_eArgError, "nil for sign");
 
     if (pSign)
-    {   
+    {
       szptr szSign;
 			if (pSign->Sign(RSTRING_PTR(szIn), szSign))
 			{
@@ -101,16 +101,14 @@ extern "C" VALUE signer_sign(VALUE self, VALUE szIn)
 
     int err_no = pSign->ErrorCode();
     if (err_no){
-			char err[20];
-			sprintf(err, "Signer error: %d", err_no);
-			rb_raise(rb_eStandardError, err);
+			rb_raise(rb_eStandardError, "Signer error: %d", err_no);
     }
 
    return ret;
 }
 
 // The initialization method for this module
-extern "C" void Init_wmsigner() 
+extern "C" void Init_wmsigner()
 {
     cSigner = rb_define_class("Signer", rb_cObject);
     rb_define_singleton_method(cSigner, "new", (ruby_method*) &signer_new, 3);
