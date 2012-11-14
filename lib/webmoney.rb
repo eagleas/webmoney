@@ -29,7 +29,7 @@ module Webmoney
   class IncorrectPurseError < WebmoneyError; end
   class NonExistentWmidError < WebmoneyError; end
   class CaCertificateError < WebmoneyError; end
-  
+
   attr_reader :wmid, :error, :errormsg, :last_request, :last_response, :interfaces, :rid
   attr_accessor :messenger
 
@@ -61,14 +61,24 @@ module Webmoney
 
     @wmid = Wmid.new(opt[:wmid])
 
-    # classic or light
-    case opt[:key]
-      when String
-        @signer = Signer.new(@wmid, opt[:password], opt[:key])
-      when OpenSSL::PKey::RSA, OpenSSL::PKey::DSA
-        @key = opt[:key]
-        @cert = opt[:cert]
-        #@password = opt[:password]
+    # When x509, key and cert is path to file or filename in ~/.wm/,
+    # or initialized PKey::RSA and X509::Certificate objects
+    def detect_file(option)
+      pathes = %w(%s ~/.wm/%s)
+      pathes.map{|path| File.expand_path(path % option)}.detect{|path| File.file?(path)}
+    end
+
+    if file = detect_file(opt[:key])
+      # light
+      @key = OpenSSL::PKey::RSA.new(File.read(file), opt[:password])
+      @cert = OpenSSL::X509::Certificate.new(File.read(detect_file(opt[:cert])))
+    elsif opt[:key].is_a? OpenSSL::PKey::RSA
+      # initialized OpenSSL::PKey::RSA objects
+      @key = opt[:key]
+      @cert = opt[:cert]
+    elsif opt[:password]
+      # key is classic base64-encoded key
+      @signer = Signer.new(@wmid, opt[:password], opt[:key])
     end
 
     # ca_cert or default

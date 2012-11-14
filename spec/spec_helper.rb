@@ -32,33 +32,12 @@ class TestWM
 end
 
 def getwm(config)
-  if config.wmtype == "light"
-    # light
-    cert = OpenSSL::X509::Certificate.new(
-      begin
-        File.read(config.cert)
-      rescue
-        File.read("#{ENV['HOME']}/.wm/#{config.cert}")
-      end)
-    key = OpenSSL::PKey::RSA.new(
-      begin
-        File.read(config.key)
-      rescue
-        File.read("#{ENV['HOME']}/.wm/#{config.key}")
-      end, config.password)
-    TestWM.new :wmid => config.wmid,
-      :key => key,
-      :cert => cert,
-      :ca_cert => WmConfig.ca_cert,
-      :rid => config.rid
-  else
-    # classic
-    TestWM.new :wmid => config.wmid,
-      :password => config.password,
-      :key => config.key,
-      :ca_cert => config.ca_cert,
-      :rid => config.rid
-  end
+  TestWM.new :wmid => config.wmid,
+    :key => config.key,
+    :password => config.password,
+    :cert => config.cert,
+    :ca_cert => WmConfig.ca_cert,
+    :rid => config.rid
 end
 
 def webmoney

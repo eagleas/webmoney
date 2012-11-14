@@ -3,8 +3,8 @@ require 'spec_helper'
 
 describe "interfaces url" do
 
-  let(:wmc) { TestWM.new } # classic
-  let(:wml) { TestWM.new :wmid => WmConfig.first['wmid'], :key => nil } # light
+  let(:wmc) { webmoney } # classic
+  let(:wml) { contragent } # light
 
   it "should be exactly type" do
     wmc.should be_classic # @wm.classic? == true
