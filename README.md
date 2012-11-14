@@ -72,8 +72,20 @@ wmid = '111222333444'
 
 ## Light
 
+The key convert instruction from P12 format to PEM see [here](http://wiki.webmoney.ru/projects/webmoney/wiki/konvertatsiya_klyuchey_wm_keeper_light_v_pem_format)
+
 ```ruby
-cert = OpenSSL::X509::Certificate.new(File.read("webmoney.cert"))
+mywm = MyWM.new(:wmid => '123456789012',
+  :cert => 'webmoney.pem', # ~/.wm/webmoney.pem
+#  :cert => '/home/user/webmoney.pem',
+  :key =>  'webmoney.key', # ~/.wm/webmoney.key
+#  :key =>  '/home/user/webmoney.key',
+  :password => 'pa$$w0rt')
+```
+or
+
+```ruby
+cert = OpenSSL::X509::Certificate.new(File.read("webmoney.pem"))
 key = OpenSSL::PKey::RSA.new(File.read("webmoney.key"), "password")
 mywm = MyWM.new(:wmid => '123456789012', :cert => cert, :key => key)
 ```
