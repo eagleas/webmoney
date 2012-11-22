@@ -10,7 +10,7 @@ require 'rubygems'
 require 'nokogiri'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
-%w(wmsigner interfaces wmid passport purse request_xml request_retval request_result messenger).each{|lib| require lib}
+%w(signer interfaces wmid passport purse request_xml request_retval request_result messenger).each{|lib| require lib}
 
 # Module for Webmoney lib. Instance contain info
 # for WMT-interfaces requests (wmid, key, etc).
@@ -36,7 +36,7 @@ module Webmoney
 
   # Preset for W3S
   def w3s_url
-    'https://w3s.wmtransfer.com/asp/'
+    'https://w3s.webmoney.ru/asp/'
   end
 
   # Required options:
@@ -250,6 +250,8 @@ module Webmoney
 
   def check_libxml_version
     libxml = Nokogiri::VERSION_INFO['libxml']
+    return true if libxml.nil?
+
     [libxml['compiled'], libxml['loaded']].each do |ver|
       major, minor = ver.match(/^(\d+)\.(\d+).*/).to_a[1,2].map{|i| i.to_i}
       return false if major < 2 or minor < 7
