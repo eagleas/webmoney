@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "webmoney"
-  s.version = "0.0.14"
+  s.version = "0.0.15.pre"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Oryol"]
-  s.date = "2012-11-21"
+  s.date = "2012-11-22"
   s.email = "eagle.alex@gmail.com"
   s.extra_rdoc_files = [
     "ChangeLog",
@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
     "lib/webmoney.rb",
     "lib/wmid.rb",
     "rakefile",
+    "spec/benchmark.rb",
     "spec/spec_helper.rb",
     "spec/unit/balance_spec.rb",
     "spec/unit/check_user.rb",
@@ -55,7 +56,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "webmoney"
   s.rubygems_version = "1.8.24"
   s.summary = "Webmoney interfaces and native wmsigner"
-  s.test_files = ["Gemfile", "spec/unit/balance_spec.rb", "spec/unit/passport_spec.rb", "spec/unit/iconv_spec.rb", "spec/unit/login_spec.rb", "spec/unit/trust_spec.rb", "spec/unit/wmid_spec.rb", "spec/unit/webmoney_spec.rb", "spec/unit/interfaces_spec.rb", "spec/unit/signer_spec.rb", "spec/unit/check_user.rb", "spec/unit/time_spec.rb", "spec/unit/messenger_spec.rb", "spec/unit/purse_spec.rb", "spec/spec_helper.rb"]
+  s.test_files = ["Gemfile", "spec/spec_helper.rb", "spec/benchmark.rb", "spec/unit/balance_spec.rb", "spec/unit/purse_spec.rb", "spec/unit/time_spec.rb", "spec/unit/check_user.rb", "spec/unit/interfaces_spec.rb", "spec/unit/messenger_spec.rb", "spec/unit/signer_spec.rb", "spec/unit/passport_spec.rb", "spec/unit/trust_spec.rb", "spec/unit/wmid_spec.rb", "spec/unit/login_spec.rb", "spec/unit/webmoney_spec.rb", "spec/unit/iconv_spec.rb"]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3

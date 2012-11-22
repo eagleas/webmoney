@@ -1,7 +1,8 @@
 ChangeLog
 
+Thu Nov 22 13:07:47 2012 +0400
 ----------------------------
-  V 0.0.15
+  V 0.0.15.pre
   * Changes in x509 cert/key configuration (backward compatible)
   * Pure ruby implementation of signing algorithm (100 times faster),
     thanks to Sergey Gridasov <grindars@gmail.com>
