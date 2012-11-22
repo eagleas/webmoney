@@ -9,9 +9,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Oryol"]
-  s.date = "2012-10-25"
+  s.date = "2012-11-21"
   s.email = "eagle.alex@gmail.com"
-  s.extensions = ["ext/wmsigner/extconf.rb"]
   s.extra_rdoc_files = [
     "ChangeLog",
     "README.md"
@@ -22,22 +21,6 @@ Gem::Specification.new do |s|
     "README.md",
     "RUNNING_TESTS",
     "VERSION",
-    "ext/wmsigner/base64.cpp",
-    "ext/wmsigner/base64.h",
-    "ext/wmsigner/cmdbase.cpp",
-    "ext/wmsigner/cmdbase.h",
-    "ext/wmsigner/crypto.cpp",
-    "ext/wmsigner/crypto.h",
-    "ext/wmsigner/extconf.rb",
-    "ext/wmsigner/md4.cpp",
-    "ext/wmsigner/md4.h",
-    "ext/wmsigner/rsalib1.cpp",
-    "ext/wmsigner/rsalib1.h",
-    "ext/wmsigner/signer.cpp",
-    "ext/wmsigner/signer.h",
-    "ext/wmsigner/stdafx.cpp",
-    "ext/wmsigner/stdafx.h",
-    "ext/wmsigner/wmsigner.cpp",
     "lib/interfaces.rb",
     "lib/messenger.rb",
     "lib/passport.rb",
@@ -45,6 +28,7 @@ Gem::Specification.new do |s|
     "lib/request_result.rb",
     "lib/request_retval.rb",
     "lib/request_xml.rb",
+    "lib/signer.rb",
     "lib/webmoney.rb",
     "lib/wmid.rb",
     "rakefile",
@@ -71,7 +55,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "webmoney"
   s.rubygems_version = "1.8.24"
   s.summary = "Webmoney interfaces and native wmsigner"
-  s.test_files = ["Gemfile", "spec/spec_helper.rb", "spec/unit/balance_spec.rb", "spec/unit/purse_spec.rb", "spec/unit/time_spec.rb", "spec/unit/check_user.rb", "spec/unit/interfaces_spec.rb", "spec/unit/messenger_spec.rb", "spec/unit/signer_spec.rb", "spec/unit/passport_spec.rb", "spec/unit/trust_spec.rb", "spec/unit/wmid_spec.rb", "spec/unit/login_spec.rb", "spec/unit/webmoney_spec.rb", "spec/unit/iconv_spec.rb"]
+  s.test_files = ["Gemfile", "spec/unit/balance_spec.rb", "spec/unit/passport_spec.rb", "spec/unit/iconv_spec.rb", "spec/unit/login_spec.rb", "spec/unit/trust_spec.rb", "spec/unit/wmid_spec.rb", "spec/unit/webmoney_spec.rb", "spec/unit/interfaces_spec.rb", "spec/unit/signer_spec.rb", "spec/unit/check_user.rb", "spec/unit/time_spec.rb", "spec/unit/messenger_spec.rb", "spec/unit/purse_spec.rb", "spec/spec_helper.rb"]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3

@@ -3,9 +3,7 @@ require 'rake'
 require 'rake/clean'
 require 'rake/extensiontask'
 
-CLEAN.include ["ext/wmsigner/*.{so,o}", "ext/wmsigner/Makefile", "lib/wmsigner.so", "pkg", "tmp"]
-
-Rake::ExtensionTask.new('wmsigner')
+CLEAN.include ["pkg"]
 
 require 'rspec/core'
 require 'rspec/core/rake_task'
@@ -30,13 +28,6 @@ spec = begin
     gemspec.summary = "Webmoney interfaces and native wmsigner"
     gemspec.files += %w( ChangeLog ) + Dir.glob( 'ssl-certs/*.crt' )
     gemspec.test_files += %w( Gemfile ) + Dir.glob( 'spec/**/*.rb' )
-
-    if RUBY_PLATFORM.match("win32")
-      gemspec.platform = Gem::Platform::WIN32
-      gemspec.files += []
-    else
-      gemspec.platform = Gem::Platform::RUBY
-      gemspec.extensions = Dir.glob( 'ext/**/extconf.rb' )
-    end
+    gemspec.add_dependency "jruby-openssl" if RUBY_PLATFORM == "java"
   end
 end
