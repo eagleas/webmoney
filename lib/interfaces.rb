@@ -28,6 +28,8 @@ module Webmoney
                                :x509 => lambda {|url| url.sub(/\.aspx$/, 'Cert.aspx')} },
       :bussines_level     => { :url => 'https://stats.wmtransfer.com/levels/XMLWMIDLevel.aspx' },
       :login              => { :url => 'https://login.wmtransfer.com/ws/authorize.xiface' },           # login
+      :req_payment        => { :url => 'https://merchant.webmoney.ru/conf/xml/XMLTransRequest.asp'},   # x20
+      :conf_payment       => { :url => 'https://merchant.webmoney.ru/conf/xml/XMLTransConfirm.asp'},   # x20
     }
   end
 

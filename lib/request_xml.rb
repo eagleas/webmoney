@@ -171,6 +171,18 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
+  def xml_transaction_get(opt)
+    Nokogiri::XML::Builder.new{ |x|
+      x.send('merchant.request') {
+        x.wmid opt[:wmid]
+        x.lmi_payee_purse opt[:payee_purse]
+        x.lmi_payment_no opt[:orderid]
+        x.lmi_payment_no_type opt[:paymenttype]
+        x.sign sign("#{opt[:wmid]}#{opt[:payee_purse]}#{opt[:orderid]}")
+      }
+    }
+  end
+
   def xml_check_user(opt)
     req = reqn()
     Nokogiri::XML::Builder.new { |x|
@@ -207,4 +219,32 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
+  def xml_req_payment(opt)
+    req = reqn()
+    Nokogiri::XML::Builder.new { |x|
+      x.send('merchant.request'){
+        x.lmi_payment_no opt[:paymentid]
+        x.wmid opt[:wmid]
+        x.lmi_payee_purse opt[:purse]
+        x.lmi_payment_amount opt[:amount]
+        x.lmi_payment_desc opt[:description]
+        x.lmi_clientnumber opt[:clientid]
+        x.lmi_clientnumber_type opt[:clientidtype]
+        x.lmi_sms_type opt[:smstype]
+        x.sign sign("#{opt[:wmid]}#{opt[:purse]}#{opt[:paymentid]}#{opt[:clientid]}#{opt[:clientidtype]}")
+      }
+    }
+  end
+
+  def xml_conf_payment(opt)
+    Nokogiri::XML::Builder.new { |x|
+      x.send('merchant.request'){
+        x.wmid opt[:wmid]
+        x.lmi_payee_purse opt[:purse]
+        x.lmi_clientnumber_code opt[:paymentcode]
+        x.lmi_wminvoiceid opt[:invoiceid]
+        x.sign sign("#{opt[:wmid]}#{opt[:purse]}#{opt[:invoiceid]}#{opt[:paymentcode]}")
+      }
+    }
+  end
 end

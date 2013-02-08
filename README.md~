@@ -231,7 +231,6 @@ res = @wm.request(:check_user,
         :paymentcode => '1234',
         :invoiceid => '815195258'
     )
-    
 Also, see spec/* for examples.
 
 
