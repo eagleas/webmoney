@@ -5,7 +5,7 @@ XML-interfaces: http://www.wmtransfer.com/eng/developers/interfaces/index.shtml
 
 Gem have built-in native *wmsigner*.
 
-Compatible with ruby: 1.8.7, 1.9.2
+Compatible with ruby: 1.8.7, 1.9.2, 2.0.0
 Reqirements: Nokogiri >= 1.4.1 built with libxml2 >= 2.7 (IMPORTANT!)
 
 Author::    Alexander Oryol (mailto:eagle.alex@gmail.com)
@@ -25,6 +25,8 @@ Completed:
 * i_trust            - x15
 * trust_me           - x15
 * check_user         - x19
+* req_payment        - x20
+* conf_payment       - x20
 * bussines_level
 * login
 
@@ -40,8 +42,7 @@ Incompleted (help need!):
 * create_purse          - x16
 * create_contract       - x17
 * transaction_get       - x18
-* req_payment		- x20
-* conf_payment		- x20
+
 
 Please, see relative documentation and parameters on wiki:
 
@@ -221,8 +222,9 @@ res = @wm.request(:check_user,
         :smstype => '1',
         :paymentid => '815195258'
     )
-## 
+
 ## X20 Confirm payment
+
 ```ruby
     @result = @wm.request(
         :conf_payment,
