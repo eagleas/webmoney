@@ -222,6 +222,7 @@ res = @wm.request(:check_user,
         :smstype => '1',
         :paymentid => '815195258'
     )
+```
 
 ## X20 Confirm payment
 
@@ -233,7 +234,7 @@ res = @wm.request(:check_user,
         :paymentcode => '1234',
         :invoiceid => '815195258'
     )
-    
+
 Also, see spec/* for examples.
 
 
