@@ -11,6 +11,8 @@ Reqirements: Nokogiri >= 1.4.1 built with libxml2 >= 2.7 (IMPORTANT!)
 Author::    Alexander Oryol (mailto:eagle.alex@gmail.com)
 License::   MIT License
 
+Also supported by: Pavel Sorokin (mailto:pahan40@gmail.com)
+
 # Request types
 
 Completed:
