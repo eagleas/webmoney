@@ -7,7 +7,7 @@ module Webmoney
 
     def initialize(str)
       str = str.to_s unless str.kind_of?(String)
-      raise IncorrectPurseError, str unless str =~ /^[BCDEGRUYZ]\d{12}$/
+      raise IncorrectPurseError, str unless str =~ /^[BCDEGRUYXZ]\d{12}$/
       super(str)
     end
 
