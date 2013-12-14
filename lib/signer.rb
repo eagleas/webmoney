@@ -40,7 +40,7 @@ class Signer
       e = read_bn_from data_io
       n = read_bn_from data_io
 
-      { e: e, n: n }
+      { :e => e, :n => n }
     end
 
     def self.try_read_encrypted(wmid, password, header, data)

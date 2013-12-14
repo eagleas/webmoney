@@ -25,7 +25,7 @@ module Webmoney
       :get_contract_info  => { :url => 'https://arbitrage.webmoney.ru/xml/X17_GetContractInfo.aspx' }, # x17
       :transaction_get    => { :url => 'https://merchant.webmoney.ru/conf/xml/XMLTransGet.asp' },      # x18
       :check_user         => { :url => 'https://apipassport.webmoney.ru/XMLCheckUser.aspx',            # x19
-                               :x509 => lambda {|url| url.sub(/\.aspx$/, 'Cert.aspx')} },
+                               :x509 => lambda {|url| 'https://apipassportcrt.webmoney.ru/XMLCheckUserCert.aspx' } },
       :bussines_level     => { :url => 'https://stats.wmtransfer.com/levels/XMLWMIDLevel.aspx' },
       :login              => { :url => 'https://login.wmtransfer.com/ws/authorize.xiface' },           # login
     }
