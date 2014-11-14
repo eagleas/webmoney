@@ -265,4 +265,5 @@ module Webmoney::RequestXML    # :nodoc:all
             end
         }
     }
+  end
 end
