@@ -189,13 +189,17 @@ module Webmoney::RequestResult    # :nodoc:all
   end
 
   def result_operation_history(doc)
-    operation = []
+    operations = []
     doc.at('//operations').children.each do |operation|
         operations_hash = {}
         operation.children.each do |child|
             operations_hash[child.name.to_sym] = child.content
         end
+        operations << operations_hash unless operations_hash.empty?
     end
-
+    {
+        :operations => operations,
+        :retval => doc.at('//retval').inner_html.to_i
+    }
   end
 end
