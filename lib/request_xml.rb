@@ -247,8 +247,9 @@ module Webmoney::RequestXML    # :nodoc:all
       }
     }
   end
-  
+
   def xml_operation_history(opt)
+    req = reqn()
     Nokogiri::XML::Builder.new { |x|
         x.send('w3s.request'){
             x.reqn req
