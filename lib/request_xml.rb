@@ -247,4 +247,22 @@ module Webmoney::RequestXML    # :nodoc:all
       }
     }
   end
+  
+  def xml_operation_history(opt)
+    Nokogiri::XML::Builder.new { |x|
+        x.send('w3s.request'){
+            x.reqn req
+            x.wmid opt[:wmid]
+            x.sign sign("#{opt[:purse]}#{req}")
+            x.getoperations do
+                x.purse opt[:purse]
+                x.wmtranid opt[:wmtranid] || 0
+                x.tranid opt[:tranid] || 0
+                x.wminvid opt[:wminvid] || 0
+                x.orderid opt[:orderid] || 0
+                x.datestart opt[:datestart]
+                x.datefinish opt[:datefinish]
+            end
+        }
+    }
 end

@@ -188,4 +188,14 @@ module Webmoney::RequestResult    # :nodoc:all
     }
   end
 
+  def result_operation_history(doc)
+    operation = []
+    doc.at('//operations').chealdre.each do |operation|
+        operations_hash = {}
+        operation.children.each do |child|
+            operations_hash[child.name.to_sym] = child.content
+        end
+    end
+
+  end
 end
