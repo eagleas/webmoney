@@ -192,8 +192,11 @@ module Webmoney::RequestResult    # :nodoc:all
     operations = []
     doc.at('//operations').children.each do |operation|
         operations_hash = {}
+        operation.attribute("ts")
         operation.children.each do |child|
             operations_hash[child.name.to_sym] = child.content
+            "ts".to_sym = operation.attribute("ts")
+            "id".to_sym = operation.attribute("id")
         end
         operations << operations_hash unless operations_hash.empty?
     end
