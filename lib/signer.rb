@@ -84,7 +84,7 @@ class Signer
     raise ArgumentError, "Incorrect WMID" unless is_wmid wmid
     raise ArgumentError, "nil password" if password.nil?
     raise ArgumentError, "nil key" if key.nil?
-    raise ArgumentError, "Illegal size for base64 keydata" unless key.length == 220
+    raise ArgumentError, "Illegal size for base64 keydata" unless (key.length >= 220) && (key.length <= 224)
 
     key = Base64.decode64 key
 
