@@ -20,13 +20,13 @@ describe Webmoney, "class" do
   end
 
   it "should correct reqn" do
-    Time.stub!(:now).and_return(Time.at(1244704683.69677))
-    @wm.send(:reqn).should == '09061111180369'
+    Time.stub(:now).and_return(Time.at(1244704683))
+    @wm.send(:reqn).should == '09061100180300'
   end
 
   it "should correct reqn with zero microsec" do
-    Time.stub!(:now).and_return(Time.at(1244704683))
-    @wm.send(:reqn).should == '09061111180300'
+    Time.stub(:now).and_return(Time.at(1244704683))
+    @wm.send(:reqn).should == '09061100180300'
   end
 
   it "should raise error on incorrect arg" do
