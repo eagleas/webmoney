@@ -224,7 +224,7 @@ module Webmoney
   # Create unique Request Number based on time,
   # return 14 digits string
   def reqn
-    t = Time.now
+    t = Time.now.utc
     msec = t.to_f.to_s.match(/\.(\d\d)/)[1] rescue '00'
     t.strftime('%y%m%d%H%M%S') + msec
   end
