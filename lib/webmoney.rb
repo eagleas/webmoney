@@ -209,6 +209,7 @@ module Webmoney
       http.key = @key
     end
     http.use_ssl = true
+    http.ssl_version = :TLSv1
     @last_request = xml
     @last_response = result = http.post( url.path, xml, "Content-Type" => "text/xml" )
     case result

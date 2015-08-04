@@ -10,6 +10,7 @@ first:
   key: 'gQABAIR6... YOUR BASE64-KEY (see wmsigner readme) ...2cC8FZTyKyjBM='
   password: _your_password_
   wmz: Z123456789012
+  wmr: R123456789012
 second:
   wmtype: light
   wmid: '012345678901'
@@ -23,5 +24,8 @@ second:
 
 HOWTO convert Light-keys:
 Russian: https://wiki.webmoney.ru/wiki/show/Konvertatsiya_klyuchey_WM_Keeper_Light_v_PEM_format
+
+For X20 support, you need to attach your purse (wmz or wmr) to merchant service.
+Russian: http://wiki.webmoney.ru/projects/webmoney/wiki/interfeys_x20
 
 Then type (RSpec required): rake spec

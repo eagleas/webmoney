@@ -44,6 +44,15 @@ module Webmoney::RequestRetval    # :nodoc:all
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
   end
 
+  def retval_transaction_get(doc)
+    # do nothing
+    retval_element = doc.at('//retval')
+    @error = retval_element.inner_html.to_i
+    @errormsg = doc.at('//retdesc').inner_html
+    @gooderrors = [0, 8, 9, 10, 11, 12]
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @gooderrors.include?(@error)
+  end
+
   def retval_check_user(doc)
     retval_element = doc.at('//retval')
     @error = retval_element.inner_html.to_i
@@ -59,4 +68,26 @@ module Webmoney::RequestRetval    # :nodoc:all
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
   end
 
+  def retval_req_payment(doc)
+    retval_element = doc.at('//retval')
+    @error = retval_element.inner_html.to_i
+    @techerrordesc = doc.at('//retdesc').inner_html
+    @errormsg = doc.at('//userdesc').inner_html
+    raise Webmoney::ResultError, [@error, @errormsg].join('-') unless @error == 0 
+  end
+
+  def retval_conf_payment(doc)
+    retval_element = doc.at('//retval')
+    @error = retval_element.inner_html.to_i
+    @errormsg = doc.at('//userdesc').inner_html
+    @techerrordesc = doc.at('//retdesc').inner_html
+    raise Webmoney::ResultError, [@error, @errormsg].join('-') unless @error == 0 
+  end
+
+  def retval_operation_history(doc)
+    retval_element = doc.at('//retval')
+    @error = retval_element.inner_html.to_i
+    @errormsg = doc.at('//retdesc').inner_html
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
+  end
 end

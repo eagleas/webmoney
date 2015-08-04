@@ -96,6 +96,75 @@ module Webmoney::RequestResult    # :nodoc:all
     }
   end
 
+  def result_transaction_get(doc)
+    if doc.at('//operation')
+      wminvoiceid = doc.at('//operation')['wminvoiceid'].to_i
+      wmtransid = doc.at('//operation')['wmtransid'].to_i
+      enumflag = doc.at('//operation/enumflag').inner_html.to_i if doc.at('//operation/enumflag')
+      amount = doc.at('//operation/amount').inner_html.to_f
+      operdate = Time.parse(doc.at('//operation/operdate').inner_html)
+      pursefrom = doc.at('//operation/pursefrom').inner_html
+      wmidfrom = doc.at('//operation/wmidfrom').inner_html
+      capitallerflag = doc.at('//operation/capitallerflag').inner_html.to_i
+      ip = doc.at('//operation/IPAddress').inner_html
+      phone = doc.at('//operation/telepat_phone').inner_html if doc.at('//operation/telepat_phone')
+      telepat_paytype = doc.at('//operation/telepat_paytype').inner_html.to_i
+      payment_number = doc.at('//operation/paymer_number').inner_html
+      paymer_type = doc.at('//operation/paymer_type').inner_html.to_i
+      {
+          :retval => doc.at('//retval').inner_html,
+          :retdesc => doc.at('//retdesc').inner_html,
+          :wminvoiceid => wminvoiceid,
+          :wmtransid => wmtransid,
+          :amount => amount,
+          :operdate => operdate,
+          :pursefrom => pursefrom,
+          :wmidfrom => wmidfrom,
+          :capitallerflag => capitallerflag,
+          :enumflag => enumflag.to_i,
+          :IPAddress => ip,
+          :telepat_phone => phone,
+          :telepat_paytype => telepat_paytype,
+          :paymer_number => payment_number,
+          :paymer_type => paymer_type
+      }
+    else
+      {
+          :retval => doc.at('//retval').inner_html,
+          :retdesc => doc.at('//retdesc').inner_html
+      }
+    end
+  end
+
+  def result_req_payment(doc)
+    {
+        :wminvoiceid  => doc.at('//operation')['wminvoiceid'].to_i,
+        :realsmstype  => doc.at('//operation')['realsmstype'].to_i,
+        :retval       => doc.at('//retval').inner_html.to_i,
+        :retdesc      => doc.at('//retdesc').inner_html,
+        :userdesc      => doc.at('//userdesc').inner_html
+    }
+  end
+
+  def result_conf_payment(doc)
+    if doc.at('//smssentstate').nil? || doc.at('//smssentstate').blank?
+      smsstate = nil
+    else
+      smsstate = doc.at('//smssentstate').inner_html
+    end
+    {
+        :wminvoiceid    => doc.at('//operation')['wminvoiceid'].to_i,
+        :wmtransid      => doc.at('//operation')['wmtransid'].to_i,
+        :amount         => doc.at('//operation/amount').inner_html.to_f,
+        :operdate       => Time.parse(doc.at('//operation/operdate').inner_html),
+        :pursefrom      => doc.at('//operation/pursefrom').inner_html,
+        :wmidfrom       => doc.at('//operation/wmidfrom').inner_html,
+        :retval         => doc.at('//retval').inner_html.to_i,
+        :retdesc        => doc.at('//retdesc').inner_html,
+        :smssentstate   => smsstate
+    }
+  end
+
   alias_method :result_i_trust, :result_trust_me
 
   def result_check_user(doc)
@@ -119,4 +188,21 @@ module Webmoney::RequestResult    # :nodoc:all
     }
   end
 
+  def result_operation_history(doc)
+    operations = []
+    doc.at('//operations').children.each do |operation|
+        operations_hash = {}
+        operation.attributes.each do |attr|
+          operations_hash[attr[1].name.to_sym] = attr[1].value
+        end
+        operation.children.each do |child|
+            operations_hash[child.name.to_sym] = child.content
+        end
+        operations << operations_hash unless operations_hash.empty?
+    end
+    {
+        :operations => operations,
+        :retval => doc.at('//retval').inner_html.to_i
+    }
+  end
 end
