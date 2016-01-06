@@ -225,9 +225,10 @@ module Webmoney
   # Create unique Request Number based on time,
   # return 14 digits string
   def reqn
-    t = Time.now
-    msec = t.to_f.to_s.match(/\.(\d\d)/)[1] rescue '00'
-    t.strftime('%y%m%d%H%M%S') + msec
+    #t = Time.now
+    #msec = t.to_f.to_s.match(/\.(\d\d)/)[1] rescue '00'
+    #t.strftime('%y%m%d%H%M%S') + msec
+    (Time.now.to_f * 10000).to_s.split(".")[0]
   end
 
   def make_xml(iface, opt)            # :nodoc:
