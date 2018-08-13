@@ -165,6 +165,21 @@ module Webmoney::RequestResult    # :nodoc:all
     }
   end
 
+  def result_set_trust(doc)
+    {
+        :trustpurseid => doc.at('//trust')['purseid'].to_i
+    }
+  end
+
+  def result_confirm_trust(doc)
+    puts doc
+    Rails.logger.info doc
+    {
+        :trustid => doc.at('//trust')['id'].to_i,
+        :slavepurse => doc.at('//trust/slavepurse').inner_html.to_s,
+        :slavewmid => doc.at('//trust/slavewmid').inner_html.to_s
+    }
+  end
   alias_method :result_i_trust, :result_trust_me
 
   def result_check_user(doc)

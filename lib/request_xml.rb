@@ -267,4 +267,33 @@ module Webmoney::RequestXML    # :nodoc:all
         }
     }
   end
+
+  def xml_set_trust(opt)
+    Nokogiri::XML::Builder.new { |x|
+      x.send('merchant.request'){
+        x.wmid opt[:wmid]
+        x.lmi_payee_purse opt[:purse]
+        x.lmi_day_limit opt[:day_limit]
+        x.lmi_week_limit opt[:week_limit]
+        x.lmi_month_limit opt[:month_limit]
+        x.lmi_clientnumber opt[:client_number]
+        x.lmi_clientnumber_type opt[:client_number_type]
+        x.lmi_sms_type opt[:sms_type]
+        x.sign sign("#{opt[:wmid]}#{opt[:purse]}#{opt[:client_number]}#{opt[:client_number_type]}#{opt[:sms_type]}")
+        x.lang opt[:lang]
+      }
+    }
+  end
+
+  def xml_confirm_trust(opt)
+    Nokogiri::XML::Builder.new { |x|
+      x.send('merchant.request'){
+        x.wmid opt[:wmid]
+        x.lmi_purseid opt[:purseid]
+        x.lmi_clientnumber_code opt[:clientnumber_code]
+        x.sign sign("#{opt[:wmid]}#{opt[:purseid]}#{opt[:clientnumber_code]}")
+        x.lang opt[:lang]
+      }
+    }
+  end
 end

@@ -30,6 +30,8 @@ module Webmoney
       :login              => { :url => 'https://login.wmtransfer.com/ws/authorize.xiface' },           # login
       :req_payment        => { :url => 'https://merchant.webmoney.ru/conf/xml/XMLTransRequest.asp'},   # x20
       :conf_payment       => { :url => 'https://merchant.webmoney.ru/conf/xml/XMLTransConfirm.asp'},   # x20
+      :set_trust          => { :url => 'https://merchant.webmoney.ru/conf/xml/XMLTrustRequest.asp'},   # x21
+      :confirm_trust      => { :url => 'https://merchant.webmoney.ru/conf/xml/XMLTrustConfirm.asp'},   # x21
     }
   end
 
