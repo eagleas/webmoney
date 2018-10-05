@@ -167,7 +167,8 @@ module Webmoney::RequestResult    # :nodoc:all
 
   def result_set_trust(doc)
     {
-        :trustpurseid => doc.at('//trust')['purseid'].to_i
+        :trustpurseid => doc.at('//trust')['purseid'].to_i,
+	:smssecureid => doc.at("//smssecureid").inner_html.to_s
     }
   end
 
