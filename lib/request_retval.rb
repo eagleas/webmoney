@@ -106,4 +106,12 @@ module Webmoney::RequestRetval    # :nodoc:all
     @errormsg = doc.at('//retdesc').inner_html
     raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
   end
+
+  def retval_transaction_moneyback(doc)
+    retval_element = doc.at('//retval')
+    @error = retval_element.inner_html.to_i
+    @errormsg = doc.at('//retdesc').inner_html
+    raise Webmoney::ResultError, [@error, @errormsg].join(' ') unless @error == 0
+  end
+
 end
