@@ -197,13 +197,13 @@ module Webmoney
 
     http = Net::HTTP.new(url.host, url.port)
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-    if File.file? @ca_cert
-      http.ca_file = @ca_cert
-    elsif File.directory? @ca_cert
-      http.ca_path = @ca_cert
-    else
-      raise CaCertificateError, @ca_cert
-    end
+    #if File.file? @ca_cert
+    #  http.ca_file = @ca_cert
+    #elsif File.directory? @ca_cert
+    #  http.ca_path = @ca_cert
+    #else
+    #  raise CaCertificateError, @ca_cert
+    #end
     unless classic?
       http.cert = @cert
       http.key = @key
