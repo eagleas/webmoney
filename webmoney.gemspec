@@ -49,7 +49,6 @@ Gem::Specification.new do |s|
     "spec/unit/wmid_spec.rb",
     "ssl-certs/AddTrust_External_Root.crt",
     "ssl-certs/WebMoneyCA.crt",
-    "ssl-certs/ca_bundle.crt",
     "webmoney.gemspec"
   ]
   s.require_paths = ["lib"]

@@ -36,7 +36,7 @@ module Webmoney
 
   # Preset for W3S
   def w3s_url
-    'https://w3s.wmtransfer.com/asp/'
+    'https://w10s.wmtransfer.com/asp/'
   end
 
   # Required options:
@@ -82,13 +82,7 @@ module Webmoney
     end
 
     # ca_cert or default
-    @ca_cert =
-      if opt[:ca_cert].nil?
-         File.dirname(__FILE__) + '/../ssl-certs/ca_bundle.crt'
-      else
-        opt[:ca_cert]
-      end
-
+    @ca_cert = opt[:ca_cert]
     @rid = opt[:rid]
 
     # encode will raise exception,
@@ -197,13 +191,16 @@ module Webmoney
 
     http = Net::HTTP.new(url.host, url.port)
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-    if File.file? @ca_cert
-      http.ca_file = @ca_cert
-    elsif File.directory? @ca_cert
-      http.ca_path = @ca_cert
-    else
-      raise CaCertificateError, @ca_cert
+    if @ca_cert
+      if File.file? @ca_cert
+        http.ca_file = @ca_cert
+      elsif File.directory? @ca_cert
+        http.ca_path = @ca_cert
+      else
+        raise CaCertificateError, @ca_cert
+      end
     end
+
     unless classic?
       http.cert = @cert
       http.key = @key
