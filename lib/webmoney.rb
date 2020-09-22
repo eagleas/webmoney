@@ -82,13 +82,7 @@ module Webmoney
     end
 
     # ca_cert or default
-    @ca_cert =
-      if opt[:ca_cert].nil?
-	nil
-      else
-        opt[:ca_cert]
-      end
-
+    @ca_cert = opt[:ca_cert]
     @rid = opt[:rid]
 
     # encode will raise exception,
@@ -197,7 +191,7 @@ module Webmoney
 
     http = Net::HTTP.new(url.host, url.port)
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-    if !@ca_cert.nil?
+    if @ca_cert
       if File.file? @ca_cert
         http.ca_file = @ca_cert
       elsif File.directory? @ca_cert
