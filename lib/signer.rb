@@ -113,7 +113,7 @@ class Signer
 
     signature = data_bignum.mod_exp(@key[:e], @key[:n])
 
-    signature.to_s(2).rjust(@key[:n].num_bytes % @key[:n].num_bytes % 2, 0.chr).unpack('n*').reverse.map { |w| sprintf '%04x', w }.join
+    signature.to_s(2).rjust(@key[:n].num_bytes + @key[:n].num_bytes % 2, 0.chr).unpack('n*').reverse.map { |w| sprintf '%04x', w }.join
   end
 
   protected
