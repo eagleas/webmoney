@@ -68,12 +68,12 @@ describe Webmoney::Passport, "class" do
   end
 
   it "should raise exception on non existent WMID" do
-    @wm.stub!(:http_request).and_return("<?xml version='1.0' encoding='windows-1251'?><response retval='0'><fullaccess>0</fullaccess><certinfo wmid='012345678901'/><retdesc>WMID not found</retdesc></response>")
+    @wm.stub(:http_request).and_return("<?xml version='1.0' encoding='windows-1251'?><response retval='0'><fullaccess>0</fullaccess><certinfo wmid='012345678901'/><retdesc>WMID not found</retdesc></response>")
     lambda {@wm.request(:get_passport, :wmid => '012345678901')}.should raise_error(Webmoney::NonExistentWmidError)
   end
 
   it "should raise exception on blank response" do
-    @wm.stub!(:http_request).and_return(nil)
+    @wm.stub(:http_request).and_return(nil)
     lambda {@wm.request(:get_passport, :wmid => '012345678901')}.should raise_error(Webmoney::NonExistentWmidError)
   end
 
